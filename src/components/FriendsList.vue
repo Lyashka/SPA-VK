@@ -2,10 +2,11 @@
   <div>
     <div>
         <transition-group name="friend-list">
-            <friends-list-item-vue v-for="friend in dataFriends"
+            <friends-list-item-vue v-for="friend in localStorageDataFriend"
                                 :friend="friend"
-                                :key="friend.id">
-
+                                :key="friend.id"
+                                >
+                  
             </friends-list-item-vue>
         </transition-group>
         
@@ -19,20 +20,22 @@ import { watch } from '@vue/runtime-core';
     import FriendsListItemVue from './FriendsListItem.vue';
 export default {
     components:{ FriendsListItemVue },
+    data(){
+      return{
+
+        mutualIndex: JSON.parse(localStorage.getItem('mutualCountsFriends')) 
+      }
+    },
     props: {
-        dataFriends: {
-            dataFriends: Array,
-        }
+      localStorageDataFriend: {
+        localStorageDataFriend: Array,
+        },
     },
 
-    methods: {
-        buildListFriends(){
+    mounted(){
 
-        }
-    },
-    watch:{
- 
     }
+    
 }
 </script>
 

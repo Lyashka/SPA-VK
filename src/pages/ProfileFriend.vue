@@ -79,7 +79,7 @@ export default {
     },
     data(){
       return{
-        MyAccessToken: 'vk1.a.CpeajMIsN5yamRyraL0EQrh-zrTxiXZJ8GvwkzebCpmlqHU11oBAVUtC7rVOdMiUvUqfHiFTPGjlJtLpOEEBLP4CsCHp_1jQi8eaz29aNFmhgK1cEoM8j0-WKqdkvlxCt68q7O_gBr76JWaYwM93--1FE8FKR8M76dGE76EOIftM2WtbQJB4iC_NNOUlsTv0',
+        MyAccessToken: 'vk1.a.XElOo9t47hkO7JEbU0jw_8Udn1mkotrGNaM1O0EiYSNe9aS22R0pLfsytTpl-ZowAp3i7BE44sf73uNjVm0IOhbF2T47tImjuc0c6HbEifgIR_VVao9goy4Wege-Ygcf-a-XowU5nflaI41j6J5YbvCI5Mwr43Wl8h5FReAwLaJPg-46GEEQoWQ561aESYH3',
         friendsUser: {},
         friend: {},
         friendsCount: '',
@@ -90,14 +90,14 @@ export default {
         noPosts: 'Постов нет',
         offsetValue: 0,
         newDataFriendList: {},
+       
         }
     },
-    created(){
-        
-    },
+
     methods: {
-        requestUserGet() {
-            jsonp('https://api.vk.com/method/users.get',
+       async requestUserGet() {
+        try {
+            await jsonp('https://api.vk.com/method/users.get',
               {
                 user_ids: `${this.$route.params.id}`,
                 fields: 'photo_200, sex, bdate, can_post',
@@ -118,25 +118,36 @@ export default {
                     this.age = '-'
                 }
               })
+        } catch (error) {
+            alert('Ошибка')
+        }
+         
         },
-        requestFriendsUser(){
-            jsonp('https://api.vk.com/method/friends.search',
+        async requestFriendsUser(){
+            
+            try {
+                await jsonp('https://api.vk.com/method/friends.search',
               {
                 user_id: `${this.$route.params.id}`,
-                count: '15',
+                count: '8',
                 fields: 'photo_50',
                 v: '5.131',
                 access_token: this.MyAccessToken
               }).then(res => {
-                // console.log(res.response);
+                console.log(res.response);
                 this.friendsCount = res.response.count
                 console.log(this.friendsCount);
                 this.friendsUser = res.response.items
                 console.log(this.friendsUser);
-              })
+              }) 
+            } catch (error) {   
+                alert('Ошибка')
+            }
+         
         },
-        requestMutualFriends(){
-            jsonp('https://api.vk.com/method/friends.getMutual?',
+        async requestMutualFriends(){
+            try {
+                await jsonp('https://api.vk.com/method/friends.getMutual?',
         {
           source_uid: '213743757',
           target_uid: `${this.$route.params.id}`,
@@ -144,10 +155,15 @@ export default {
           access_token: this.MyAccessToken
         }).then(res => {
             this.mutualFriendsCount = res.response.length
-        })
+        }) 
+            } catch (error) {
+                alert('Ошибка')
+            }
+         
       },
-      requestWallGet(){
-        jsonp('https://api.vk.com/method/wall.get',
+      async requestWallGet(){
+        try {
+            await jsonp('https://api.vk.com/method/wall.get',
         {
         //   source_uid: '213743757',
           owner_id: `${this.$route.params.id}`,
@@ -158,10 +174,15 @@ export default {
             console.log(this.posts);
             // console.log( this.posts[1].attachments[0].photo.sizes[6].url);
         })
+        } catch (error) {
+            alert('Ошибка')
+        }
+      
       },
-      requestOffsetFriendList(){
-        this.offsetValue += 15
-        jsonp('https://api.vk.com/method/friends.search?',
+      async requestOffsetFriendList(){
+        this.offsetValue += 8
+        try {
+            await jsonp('https://api.vk.com/method/friends.search?',
               {
                 user_id: `${this.$route.params.id}`,
                 count: '15',
@@ -169,20 +190,22 @@ export default {
                 fields: 'photo_50',
                 v: '5.131',
                 access_token: this.MyAccessToken
-                // count: '15',
-                // offset: String(this.offsetValue),
-                // fields:"photo_50",
-                // v: '5.131',
-                // access_token: this.MyAccessToken
+                
               }).then(res => {
                 this.newDataFriendList = res.response.items;
                 this.newDataFriendList.forEach(element => {
                   this.friendsUser.push(element)
                 });
-              })
+              })  
+        } catch (error) {
+            alert('Ошибка')
+        }
+       
+       
       }
     },
     mounted() {
+        
         this.requestFriendsUser()
         this.requestUserGet()
         this.requestMutualFriends()

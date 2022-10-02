@@ -3,7 +3,11 @@
         <button class="container" @click="$router.push(`/profile/${friend.id}`)">
             <img class="imgFriend" :src="friend.photo_50"/>
             <div class="borderBottomFriend">
-                <div> {{ friend.first_name }} {{ friend.last_name }}</div>
+                <div class="containerFriend">
+                    <div>{{ friend.first_name }} {{ friend.last_name }}</div>
+                    <div class="mutual">{{ friend.mutual }}</div> 
+                </div>
+                
             </div>
         </button>
 
@@ -17,13 +21,16 @@
 export default {
     data() {
         return {
-
+            // mutualIndex: JSON.parse(localStorage.getItem('mutualCountsFriends')) 
         }
     },
     props: {
         friend: {
             type: Object,
         },
+    },
+    mounted() {
+
     }
 }
 </script>
@@ -55,5 +62,16 @@ export default {
     height: 100%;
     width: 100%;
     padding-left: 10px;
+    
+}
+.containerFriend{
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+}
+.mutual{
+    margin-right: 15px;
+    display: flex;
+    
 }
 </style>
