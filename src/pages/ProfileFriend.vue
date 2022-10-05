@@ -79,7 +79,7 @@ export default {
     },
     data(){
       return{
-        MyAccessToken: 'vk1.a.XElOo9t47hkO7JEbU0jw_8Udn1mkotrGNaM1O0EiYSNe9aS22R0pLfsytTpl-ZowAp3i7BE44sf73uNjVm0IOhbF2T47tImjuc0c6HbEifgIR_VVao9goy4Wege-Ygcf-a-XowU5nflaI41j6J5YbvCI5Mwr43Wl8h5FReAwLaJPg-46GEEQoWQ561aESYH3',
+        MyAccessToken: 'vk1.a.bliSQGPwAPCsWlAWuh4PKdtqj-V0ZzXzTbe7IhLnZF1ZQ_pVDYHflzKdnA_gbZi-jDZXh0q-2PiiU1Djsk3C6mTHfv7vS9x_wJif5ulIfiuX6tdAglUem2OMfcX_wAUI3RMEHBhSLNbvA1pVktoFgrSO_T61v8HMfOYAxBl5wfCLFlPxHOKRz5RQIe7TF7CR',
         friendsUser: {},
         friend: {},
         friendsCount: '',
@@ -119,7 +119,7 @@ export default {
                 }
               })
         } catch (error) {
-            alert('Ошибка')
+            console.log(error);
         }
          
         },
@@ -141,7 +141,7 @@ export default {
                 console.log(this.friendsUser);
               }) 
             } catch (error) {   
-                alert('Ошибка')
+                console.log(error);
             }
          
         },
@@ -157,7 +157,7 @@ export default {
             this.mutualFriendsCount = res.response.length
         }) 
             } catch (error) {
-                alert('Ошибка')
+                console.log(error);
             }
          
       },
@@ -175,7 +175,7 @@ export default {
             // console.log( this.posts[1].attachments[0].photo.sizes[6].url);
         })
         } catch (error) {
-            alert('Ошибка')
+            console.log(error);
         }
       
       },
@@ -198,7 +198,7 @@ export default {
                 });
               })  
         } catch (error) {
-            alert('Ошибка')
+            console.log(error);
         }
        
        
@@ -210,7 +210,6 @@ export default {
         this.requestUserGet()
         this.requestMutualFriends()
         this.requestWallGet()
-        
         
     },
 }

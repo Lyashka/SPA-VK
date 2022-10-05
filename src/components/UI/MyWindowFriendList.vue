@@ -12,37 +12,20 @@
   <script>
   export default {
       name: 'my-windowList',
-    //   props: {
-    //       show: {
-    //           type: Boolean,
-    //           default: false
-    //       }
-    //   },
       methods: {
-        //   hideDialog(){
-        //      this.$emit('update:show', false)
-        //   }
       }
   }
   </script>
   
   <style scoped>
-  /* .dialog{
-      top: 0;
-      bottom: 0;
-      right: 0;
-      left: 0;
-      background: rgba(0, 0, 0, 0.5);
-      position: fixed;
-      display: flex;
-  } */
+
   .dialog__content{
       margin: auto;
       margin-top: 1%;
       padding: 0;
       background-color:aliceblue;
       border-radius: 12px;
-      min-height: 500px;
+      min-height: 390px;
       /* max-height: 710px; */
       min-width: 500px;
       /* max-width: 500px; */

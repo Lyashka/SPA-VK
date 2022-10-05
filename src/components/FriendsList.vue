@@ -6,7 +6,6 @@
                                 :friend="friend"
                                 :key="friend.id"
                                 >
-                  
             </friends-list-item-vue>
         </transition-group>
         
@@ -16,7 +15,6 @@
 </template>
 
 <script>
-import { watch } from '@vue/runtime-core';
     import FriendsListItemVue from './FriendsListItem.vue';
 export default {
     components:{ FriendsListItemVue },
