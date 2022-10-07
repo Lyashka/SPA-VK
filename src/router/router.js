@@ -12,7 +12,8 @@ const routes = [
     {
         path: '/profile/:id',
         component: ProfileFriend
-    }
+    },
+   
 ]
 
 const router = createRouter({

@@ -1,6 +1,7 @@
 <template>
     <div>
       <div class="app__btns">
+        <div><my-button  ><a href="https://oauth.vk.com/authorize?client_id=51428350&display=page&redirect_uri=http://localhost:8080/&scope=friends&response_type=token&v=v=5.131">Авторизировать</a></my-button></div>
           <div><my-button @click="buildListFriends">Построить</my-button></div>
           <div>
               <my-select v-model="selectedSort"
@@ -31,25 +32,36 @@
   </template>
   
   <script>
+    
+  import Vue from 'vue'
   import axios from 'axios'
   import FriendsListVue from '@/components/FriendsList.vue'
   import MyButton from '@/components/UI/MyButton.vue'
   import MySelect from '@/components/UI/MySelect.vue'
   import MyWindowFriendListVue from '@/components/UI/MyWindowFriendList.vue'
   import { jsonp } from 'vue-jsonp'
-  
+  import VKAuth from '@dyadikov/vue-vk-oauth2'
+//   new Vue(VKAuth, {apiId: 51428350,
+//   widgets: [{
+//     widget: 'ContactUs',
+//     selector: 'vk_contact_us',
+//     props: {text: 'Задайте свой вопрос'}
+//   }]
+// })
   
   export default {
+    
     components:{
       FriendsListVue,
       MyWindowFriendListVue,
       MyButton,
       MySelect,
     },
+    
     data(){
       return{
         offsetValueProfileFriend: 0,
-        MyAccessToken: 'vk1.a.bliSQGPwAPCsWlAWuh4PKdtqj-V0ZzXzTbe7IhLnZF1ZQ_pVDYHflzKdnA_gbZi-jDZXh0q-2PiiU1Djsk3C6mTHfv7vS9x_wJif5ulIfiuX6tdAglUem2OMfcX_wAUI3RMEHBhSLNbvA1pVktoFgrSO_T61v8HMfOYAxBl5wfCLFlPxHOKRz5RQIe7TF7CR',
+        MyAccessToken: '',
         dataFriends: [],
         // windowVisible: false,
         selectedSort: '',
@@ -72,8 +84,30 @@
       
     },
     methods: {  
-  
+      // vkLogin () {
+      // $vkAuth.login()
+      //   .then(response => {
+      //     console.log('vklogin', response)
+      //   })
+      //   .catch(error => {
+      //     console.error(error)
+      //   })
+      // },
+      authUser(){
+      //   axios.post('https://oauth.vk.com/access_token?client_id=51428350&client_secret=QIjLmhKbH14AsJYgL2mW&redirect_uri=http://localhost:8080/&code=cd6ab5e90ef8686fd0'
+      //   //   'https://oauth.vk.com/access_token?',{
+      //   // client_id: '51428350',
+      //   // client_secret: 'QIjLmhKbH14AsJYgL2mW',
+      //   // redirect_uri: 'http://localhost:8080/',
+      //   // code: 'e6475c124b4f7943df', 
+      //   // }
+      //   )
+      //  .then(res => console.log(res))
+
+      },
       buildListFriends(){
+          this.getUrlParam()
+          // this.authUser()
           this.requestFriendlList();
           this.selectedSort = ''
       },
@@ -134,10 +168,21 @@
                 this.requestMutualFriends(this.newData)
               })
       },
+
+      getUrlParam(){
+       const url = window.location.href
+       const token = url.match(/(?:#|#.+&)access_token=([^&]+)/)[1]
+       this.MyAccessToken = token
+       console.log(this.MyAccessToken);
+      }
      
     },
   
     mounted() {
+      // this.getUrlParam()
+      // console.log(window.location.href);
+      // console.log(window.location.href.get('access_token'));
+      // this.authUser()
       this.localStorageDataFriend = JSON.parse(localStorage.getItem('localStorageDataFriend'))      
       },
 
