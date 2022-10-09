@@ -1,15 +1,19 @@
 <template>
-    <div>
+    <div class="main-container">
+      <div>
       <div class="app__btns">
-        <div><my-button  ><a href="https://oauth.vk.com/authorize?client_id=51428350&display=page&redirect_uri=http://localhost:8080/&scope=friends&response_type=token&v=v=5.131">Авторизировать</a></my-button></div>
-          <div><my-button @click="buildListFriends">Построить</my-button></div>
+          <div><my-button @click="buildListFriends" v-show="buildBtnVisible">Построить</my-button></div>
+
           <div>
               <my-select v-model="selectedSort"
-                          :options="sortoption"> 
-  
+                          :options="sortoption"
+                          v-show="true"> 
+                          
               </my-select>
           </div>
+         
       </div>
+          
       <div class="container">
           <div>
               <my-window-friend-list-vue >
@@ -23,31 +27,34 @@
               </my-window-friend-list-vue>
           </div>
       </div>
+
       <div class="addFriendList" @click="requestOffsetFriendList">
         <div>...</div> 
       </div>
      
+      <my-sign-in-vue v-model:show="signInWindowVisible">
+            <h4 class="twxt_content">Войти в приложение</h4>
+            <div class="signIn_container"><a href="https://oauth.vk.com/authorize?client_id=51428350&display=popup&redirect_uri=http://localhost:8080/&scope=friends&response_type=token&v=v=5.131"><my-button class="signInBtn" @click="showWindowHide">Войти</my-button></a></div>
+      </my-sign-in-vue>
+      
+
+      </div>
+
+      <div class="exitBtn">
+          <my-button @click="exitCkick">Выйти</my-button>
+      </div>
     </div>
     
   </template>
   
   <script>
     
-  import Vue from 'vue'
-  import axios from 'axios'
   import FriendsListVue from '@/components/FriendsList.vue'
   import MyButton from '@/components/UI/MyButton.vue'
   import MySelect from '@/components/UI/MySelect.vue'
   import MyWindowFriendListVue from '@/components/UI/MyWindowFriendList.vue'
+  import MySignInVue from '@/components/UI/MySignIn.vue'
   import { jsonp } from 'vue-jsonp'
-  import VKAuth from '@dyadikov/vue-vk-oauth2'
-//   new Vue(VKAuth, {apiId: 51428350,
-//   widgets: [{
-//     widget: 'ContactUs',
-//     selector: 'vk_contact_us',
-//     props: {text: 'Задайте свой вопрос'}
-//   }]
-// })
   
   export default {
     
@@ -56,6 +63,7 @@
       MyWindowFriendListVue,
       MyButton,
       MySelect,
+      MySignInVue,
     },
     
     data(){
@@ -63,54 +71,45 @@
         offsetValueProfileFriend: 0,
         MyAccessToken: '',
         dataFriends: [],
-        // windowVisible: false,
         selectedSort: '',
         sortoption: [
-          // {value: '', name: 'Все'},
           {value: 'first_name', name: 'По имени'},
           {value: 'last_name', name: 'По фамилии'},
           {value: 'mutual', name: 'Общие друзья'}
         ],
         SOURCE_UID: '213743757',
-        // TARGET_UID: '135643350',
-        // mutualFriendsCount: [],
         localeStorageMutualFriends: [],
         newData: [],
         valueMutual: 0,
         dataFriendsAndMutual: [],
         localStorageDataFriend: [],
-
+        signInWindowVisible: true,
+        buildBtnVisible: true,
       }
       
     },
     methods: {  
-      // vkLogin () {
-      // $vkAuth.login()
-      //   .then(response => {
-      //     console.log('vklogin', response)
-      //   })
-      //   .catch(error => {
-      //     console.error(error)
-      //   })
-      // },
-      authUser(){
-      //   axios.post('https://oauth.vk.com/access_token?client_id=51428350&client_secret=QIjLmhKbH14AsJYgL2mW&redirect_uri=http://localhost:8080/&code=cd6ab5e90ef8686fd0'
-      //   //   'https://oauth.vk.com/access_token?',{
-      //   // client_id: '51428350',
-      //   // client_secret: 'QIjLmhKbH14AsJYgL2mW',
-      //   // redirect_uri: 'http://localhost:8080/',
-      //   // code: 'e6475c124b4f7943df', 
-      //   // }
-      //   )
-      //  .then(res => console.log(res))
-
+      exitCkick() {
+        this.buildBtnVisible = true
+        localStorage.clear();
+        location.reload()
       },
+
+      showWindowHide(){
+        this.signInWindowVisible = false;
+        localStorage.setItem('signInWindowVisible', this.signInWindowVisible)
+      },  
+
+
       buildListFriends(){
           this.getUrlParam()
-          // this.authUser()
           this.requestFriendlList();
+          this.selectVisible = true,
           this.selectedSort = ''
+          this.buildBtnVisible = false
+          localStorage.setItem('buildBtnVisible', this.buildBtnVisible)
       },
+
       requestFriendlList(){
         jsonp('https://api.vk.com/method/friends.search?',
               {
@@ -120,14 +119,11 @@
                 access_token: this.MyAccessToken
               }).then(res => {
                 this.dataFriends = res.response.items;
-                console.log(this.dataFriends);
-                
                 this.requestMutualFriends(this.dataFriends)
-                
               })     
       },
+
       async requestMutualFriends(value){
-        
           for (const item of value) {
          await jsonp('https://api.vk.com/method/friends.getMutual?',
         {
@@ -137,24 +133,16 @@
           access_token: this.MyAccessToken
         }).then(res => {
           this.valueMutual = res.response.length
-            // this.mutualFriendsCount.push(this.valueMutual)
             item['mutual'] = this.valueMutual
-            
-            console.log(item);
             this.dataFriendsAndMutual.push(item)
         })
-        
       };
       this.localStorageDataFriend = this.dataFriendsAndMutual
-      console.log('this.dataFriendsAndMutual');
-      console.log(this.localStorageDataFriend);
-     
-      
       localStorage.setItem('localStorageDataFriend', JSON.stringify(this.dataFriendsAndMutual))
       },
 
       requestOffsetFriendList(){
-        this.dataFriendsAndMutual =  this.localStorageDataFriend 
+        this.dataFriendsAndMutual = this.localStorageDataFriend 
         this.offsetValueProfileFriend = this.dataFriendsAndMutual.length + 8
         jsonp('https://api.vk.com/method/friends.search?',
               {
@@ -172,18 +160,32 @@
       getUrlParam(){
        const url = window.location.href
        const token = url.match(/(?:#|#.+&)access_token=([^&]+)/)[1]
+       localStorage.setItem('token', token)
        this.MyAccessToken = token
-       console.log(this.MyAccessToken);
       }
      
     },
   
     mounted() {
-      // this.getUrlParam()
-      // console.log(window.location.href);
-      // console.log(window.location.href.get('access_token'));
-      // this.authUser()
-      this.localStorageDataFriend = JSON.parse(localStorage.getItem('localStorageDataFriend'))      
+      this.buildBtnVisible = localStorage.getItem('buildBtnVisible')
+      if (this.buildBtnVisible == null){
+        this.buildBtnVisible = true
+      }else{
+        this.buildBtnVisible = false
+      }
+      
+      console.log(this.buildBtnVisible);
+      // if(this.btnVisible == null){
+      //   this.btnVisible = true
+      // }
+
+      this.signInWindowVisible = localStorage.getItem('signInWindowVisible')
+      this.MyAccessToken = localStorage.getItem('token')
+      if(this.signInWindowVisible == null){
+        this.signInWindowVisible = true
+      }
+      this.localStorageDataFriend = JSON.parse(localStorage.getItem('localStorageDataFriend'))   
+
       },
 
     watch: {
@@ -197,10 +199,6 @@
             return friend2.mutual - friend1.mutual  
           }) 
         }
-        // else if(newValue == ''){
-        //   console.log('d');
-        //   this.dataFriendsAndMutual =  this.localStorageDataFriend 
-        // }
       }
     }
   }
@@ -209,14 +207,12 @@
   <style scoped>
   
   .container{
-      /* margin-left: 60px; */
       display: flex;
       justify-content: center;
       
   }
   .app__btns{
      margin-left: auto;
-     /* 545px */
      margin-right: auto;
       margin-top: 15px; 
       margin-bottom: 15px;
@@ -234,13 +230,33 @@
     background-color:aliceblue;
     display: flex;
     justify-content: center;
-    /* border-bottom: 1px solid black; */
     align-items: center;
     box-shadow: 1px 1px  rgba(0, 0, 0, 0.258);
     border-radius: 6px;
   }
   .addFriendList:hover{
     background-color:#0000003b;
+  }
+  .signInBtn{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 15px;
+    width: 250px;
+    
+  }
+  .twxt_content{
+    font-size: 20px;
+    display: flex;
+    justify-content: center;
+  }
+  .main-container{
+    display: flex;
+    justify-content: center;
+  }
+  .exitBtn{
+    margin-left: 20px;
+    margin-top: 70px
   }
   
   </style>

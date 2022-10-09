@@ -16,7 +16,7 @@ export default {
     padding: 10px 15px;
     background: none;
     color: rgb(8, 30, 66);
-    border-radius: 5px;
+    border-radius: 12px;
     border: none;
     box-shadow: 0.3px 0.3px black;
     display: flex;
@@ -25,7 +25,7 @@ export default {
     
 }
 .btn:hover{
-    background-color: aliceblue;
+    background-color: rgb(196, 217, 234);
   
 }
 </style>

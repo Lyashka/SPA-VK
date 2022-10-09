@@ -32,12 +32,16 @@
 
                 </div>
                 <div class="posts">
-                    <div >
+                    
+                        <div v-if="posts.length > 0">
                         <post-item v-for="post in posts" :post="post" :key="post.id" >
 
                         </post-item>
-                    </div>
-                        
+                        </div>
+                        <div class="text_content" v-else>
+                            {{ noPosts }}
+                        </div>
+            
                 </div>
             </div>
             <div class="friendListContainer">
@@ -60,7 +64,6 @@
 </template>
 
 <script>
-import FriendsListItemVue from '@/components/FriendsListItem.vue';
 import MyProfileFriendVue from '@/components/UI/MyProfileFriend.vue';
 import { jsonp } from 'vue-jsonp'
 import FriendsListItem from '@/components/FriendsListItem.vue';
@@ -79,7 +82,7 @@ export default {
     },
     data(){
       return{
-        MyAccessToken: 'vk1.a.bliSQGPwAPCsWlAWuh4PKdtqj-V0ZzXzTbe7IhLnZF1ZQ_pVDYHflzKdnA_gbZi-jDZXh0q-2PiiU1Djsk3C6mTHfv7vS9x_wJif5ulIfiuX6tdAglUem2OMfcX_wAUI3RMEHBhSLNbvA1pVktoFgrSO_T61v8HMfOYAxBl5wfCLFlPxHOKRz5RQIe7TF7CR',
+        MyAccessToken: localStorage.getItem('token'),
         friendsUser: {},
         friend: {},
         friendsCount: '',
@@ -87,7 +90,7 @@ export default {
         sex: '',
         age: '',
         posts: '',
-        noPosts: 'Постов нет',
+        noPosts: 'Записей нет',
         offsetValue: 0,
         newDataFriendList: {},
        
@@ -303,6 +306,10 @@ export default {
   }
   .addFriendList:hover{
     background-color:#0000003b;
+  }
+  .text_content{
+    margin-left: 20px;
+    border-top: 1px solid rgba(0, 0, 0, 0.232);
   }
 
 </style>
