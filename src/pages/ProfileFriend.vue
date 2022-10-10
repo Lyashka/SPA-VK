@@ -6,6 +6,9 @@
     <div class="container">
             <div class="leftContainer">
                 <div class="containerTopBar">
+                    <PreLoader v-show="visiblePreLoader">
+
+                    </PreLoader>
                     <div class="topbar">
                         <div>
                             <img class="imgProfile" :src="friend.photo_200"/>
@@ -32,7 +35,9 @@
 
                 </div>
                 <div class="posts">
-                    
+                        <PreLoader v-show="visiblePreLoaderPosts">
+
+                        </PreLoader>
                         <div v-if="posts.length > 0">
                         <post-item v-for="post in posts" :post="post" :key="post.id" >
 
@@ -45,19 +50,19 @@
                 </div>
             </div>
             <div class="friendListContainer">
-                <div class="friendList">
-                <friends-list-item v-for="friend in friendsUser" :friend="friend" :key="friend.id">
+                <PreLoader v-show="visiblePreLoaderFriends">
 
-                </friends-list-item>
-                
+                </PreLoader>
+                <div class="friendList">
+                    <friends-list-item v-for="friend in friendsUser" :friend="friend" :key="friend.id">
+
+                    </friends-list-item>
+                </div>
+                <div  iv class="addFriendList" @click="requestOffsetFriendList">
+                        <div>Ещё..</div> 
+                </div>
             </div>
-            <div class="addFriendList" @click="requestOffsetFriendList">
-                    <div>Ещё..</div> 
-            </div>
-            </div>
-            
     </div>
-           
     </my-profile-friend-vue>
 
     
@@ -69,17 +74,16 @@ import { jsonp } from 'vue-jsonp'
 import FriendsListItem from '@/components/FriendsListItem.vue';
 import PostItem from '@/components/PostItem.vue';
 import MyButtonVue from '@/components/UI/MyButton.vue';
+import PreLoader from '@/components/UI/PreLoader.vue';
 export default {
     components: {
-        MyProfileFriendVue,
-        FriendsListItem,
-        PostItem,
-        MyButtonVue
-
-    },
-    props:{
-
-    },
+    MyProfileFriendVue,
+    FriendsListItem,
+    PostItem,
+    MyButtonVue,
+    PreLoader
+},
+    
     data(){
       return{
         MyAccessToken: localStorage.getItem('token'),
@@ -93,12 +97,16 @@ export default {
         noPosts: 'Записей нет',
         offsetValue: 0,
         newDataFriendList: {},
-       
+        visiblePreLoader: false,
+        visiblePreLoaderPosts: false,
+        visiblePreLoaderFriends: false,
+        myUserId: '',
         }
     },
 
     methods: {
        async requestUserGet() {
+        this.visiblePreLoader = true
         try {
             await jsonp('https://api.vk.com/method/users.get',
               {
@@ -107,9 +115,7 @@ export default {
                 v: '5.131',
                 access_token: this.MyAccessToken
               }).then(res => {
-                // console.log(res.response);
                 this.friend = res.response[0]
-                console.log(this.friend);
                 this.sex = this.friend.sex
                 if(this.sex == 2){
                     this.sex = 'М'
@@ -124,10 +130,11 @@ export default {
         } catch (error) {
             console.log(error);
         }
-         
+        this.visiblePreLoader = false
         },
+
         async requestFriendsUser(){
-            
+            this.visiblePreLoaderFriends = true
             try {
                 await jsonp('https://api.vk.com/method/friends.search',
               {
@@ -137,22 +144,20 @@ export default {
                 v: '5.131',
                 access_token: this.MyAccessToken
               }).then(res => {
-                console.log(res.response);
                 this.friendsCount = res.response.count
-                console.log(this.friendsCount);
                 this.friendsUser = res.response.items
-                console.log(this.friendsUser);
               }) 
             } catch (error) {   
                 console.log(error);
             }
-         
+            this.visiblePreLoaderFriends = false
         },
+
         async requestMutualFriends(){
             try {
                 await jsonp('https://api.vk.com/method/friends.getMutual?',
         {
-          source_uid: '213743757',
+          source_uid: this.myUserId,
           target_uid: `${this.$route.params.id}`,
           v: '5.131',
           access_token: this.MyAccessToken
@@ -164,24 +169,24 @@ export default {
             }
          
       },
+
       async requestWallGet(){
+        this.visiblePreLoaderPosts = true
         try {
             await jsonp('https://api.vk.com/method/wall.get',
         {
-        //   source_uid: '213743757',
           owner_id: `${this.$route.params.id}`,
           v: '5.131',
           access_token: this.MyAccessToken
         }).then(res => {
             this.posts = res.response.items
-            console.log(this.posts);
-            // console.log( this.posts[1].attachments[0].photo.sizes[6].url);
         })
         } catch (error) {
             console.log(error);
         }
-      
+        this.visiblePreLoaderPosts = false
       },
+
       async requestOffsetFriendList(){
         this.offsetValue += 8
         try {
@@ -203,17 +208,15 @@ export default {
         } catch (error) {
             console.log(error);
         }
-       
-       
       }
     },
     mounted() {
-        
+        this.myUserId = localStorage.getItem('userId')
+        console.log(this.myUserId);
         this.requestFriendsUser()
         this.requestUserGet()
         this.requestMutualFriends()
         this.requestWallGet()
-        
     },
 }
 </script>
@@ -277,7 +280,6 @@ export default {
   border-left: 1px solid rgba(0, 0, 0, 0.314);
   width: 40%;
   display:flex;
-  /* margin-right: 10px; */
   margin-top: 10px;
   flex-direction: column;
   pointer-events: none;
@@ -299,7 +301,6 @@ export default {
     background-color:aliceblue;
     display: flex;
     justify-content: center;
-    /* border-bottom: 1px solid black; */
     align-items: center;
     box-shadow: 1px 1px  rgba(0, 0, 0, 0.258);
     border-radius: 6px;

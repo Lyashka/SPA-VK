@@ -17,19 +17,21 @@
       <div class="container">
           <div>
               <my-window-friend-list-vue >
-                <friends-list-vue class="list_content" 
+                
+                    <friends-list-vue class="list_content" 
                           v-show="true"
                           :localStorageDataFriend="localStorageDataFriend"
-                          >
-                          
-                              
-                </friends-list-vue>
+                          >     
+                    </friends-list-vue>
+                    <PreLoader class="preLoader" v-show="visiblePreLoader">
+
+                    </PreLoader>
               </my-window-friend-list-vue>
           </div>
       </div>
 
       <div class="addFriendList" @click="requestOffsetFriendList">
-        <div>...</div> 
+        <div>{{ offsetBtn }}</div> 
       </div>
      
       <my-sign-in-vue v-model:show="signInWindowVisible">
@@ -55,20 +57,24 @@
   import MyWindowFriendListVue from '@/components/UI/MyWindowFriendList.vue'
   import MySignInVue from '@/components/UI/MySignIn.vue'
   import { jsonp } from 'vue-jsonp'
+  import PreLoader from '@/components/UI/PreLoader.vue'
+
   
   export default {
     
     components:{
-      FriendsListVue,
-      MyWindowFriendListVue,
-      MyButton,
-      MySelect,
-      MySignInVue,
-    },
+    FriendsListVue,
+    MyWindowFriendListVue,
+    MyButton,
+    MySelect,
+    MySignInVue,
+    PreLoader,
+},
     
     data(){
       return{
         offsetValueProfileFriend: 0,
+        offsetBtn: '...',
         MyAccessToken: '',
         dataFriends: [],
         selectedSort: '',
@@ -77,7 +83,7 @@
           {value: 'last_name', name: 'По фамилии'},
           {value: 'mutual', name: 'Общие друзья'}
         ],
-        SOURCE_UID: '213743757',
+        source_uid_user: '',
         localeStorageMutualFriends: [],
         newData: [],
         valueMutual: 0,
@@ -85,6 +91,7 @@
         localStorageDataFriend: [],
         signInWindowVisible: true,
         buildBtnVisible: true,
+        visiblePreLoader: false,
       }
       
     },
@@ -102,6 +109,7 @@
 
 
       buildListFriends(){
+          this.getUrlParamUserId()
           this.getUrlParam()
           this.requestFriendlList();
           this.selectVisible = true,
@@ -111,6 +119,7 @@
       },
 
       requestFriendlList(){
+        this.visiblePreLoader = true
         jsonp('https://api.vk.com/method/friends.search?',
               {
                 count: '8',
@@ -120,31 +129,35 @@
               }).then(res => {
                 this.dataFriends = res.response.items;
                 this.requestMutualFriends(this.dataFriends)
-              })     
+               
+              })
       },
 
       async requestMutualFriends(value){
           for (const item of value) {
          await jsonp('https://api.vk.com/method/friends.getMutual?',
         {
-          source_uid: '213743757',
+          source_uid: `${this.source_uid_user}`,
           target_uid: `${item.id}`,
           v: '5.131',
           access_token: this.MyAccessToken
         }).then(res => {
           this.valueMutual = res.response.length
             item['mutual'] = this.valueMutual
-            this.dataFriendsAndMutual.push(item)
+            this.dataFriendsAndMutual.push(item)           
         })
       };
+      this.visiblePreLoader = false
       this.localStorageDataFriend = this.dataFriendsAndMutual
       localStorage.setItem('localStorageDataFriend', JSON.stringify(this.dataFriendsAndMutual))
       },
 
-      requestOffsetFriendList(){
+      async requestOffsetFriendList(){
+        this.offsetBtn='...'
         this.dataFriendsAndMutual = this.localStorageDataFriend 
         this.offsetValueProfileFriend = this.dataFriendsAndMutual.length + 8
-        jsonp('https://api.vk.com/method/friends.search?',
+
+         await jsonp('https://api.vk.com/method/friends.search?',
               {
                 count: '8',
                 offset: String(this.offsetValueProfileFriend),
@@ -158,12 +171,17 @@
       },
 
       getUrlParam(){
-       const url = window.location.href
+        const url = window.location.href
        const token = url.match(/(?:#|#.+&)access_token=([^&]+)/)[1]
        localStorage.setItem('token', token)
        this.MyAccessToken = token
+      },
+      getUrlParamUserId(){
+      const url = window.location.href
+       const userId = url.match(/(?:#|#.+&)user_id=([^&]+)/)[1]
+      localStorage.setItem('userId', userId)
+      this.source_uid_user = userId
       }
-     
     },
   
     mounted() {
@@ -173,14 +191,10 @@
       }else{
         this.buildBtnVisible = false
       }
-      
-      console.log(this.buildBtnVisible);
-      // if(this.btnVisible == null){
-      //   this.btnVisible = true
-      // }
 
       this.signInWindowVisible = localStorage.getItem('signInWindowVisible')
       this.MyAccessToken = localStorage.getItem('token')
+      this.source_uid_user = localStorage.getItem('userId')
       if(this.signInWindowVisible == null){
         this.signInWindowVisible = true
       }
@@ -190,15 +204,15 @@
 
     watch: {
       selectedSort(newValue){
-        if(newValue != 'mutual'){
+          if(newValue != 'mutual'){
           this.localStorageDataFriend.sort( (friend1, friend2) => {
             return friend1[newValue]?.localeCompare(friend2[newValue])
-        })
-        }else if(newValue == 'mutual'){
-          this.localStorageDataFriend.sort((friend1, friend2)=> {
+            })
+          }else if(newValue == 'mutual'){
+            this.localStorageDataFriend.sort((friend1, friend2)=> {
             return friend2.mutual - friend1.mutual  
-          }) 
-        }
+            }) 
+          }
       }
     }
   }
@@ -258,6 +272,13 @@
     margin-left: 20px;
     margin-top: 70px
   }
-  
+  .preLoader{
+    margin-left: 200px;
+    margin-top: 100px;
+    position: fixed;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
   </style>
   

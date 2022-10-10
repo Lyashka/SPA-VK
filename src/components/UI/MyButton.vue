@@ -21,8 +21,6 @@ export default {
     box-shadow: 0.3px 0.3px black;
     display: flex;
     align-self:flex-end;
-    
-    
 }
 .btn:hover{
     background-color: rgb(196, 217, 234);
