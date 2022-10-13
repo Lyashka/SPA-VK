@@ -1,5 +1,5 @@
 <template>
-  <div class="signIn_container" >
+  <div class="signIn_container" v-if="show === true" @click="hideWindow">
     <div class="signIn_content">
       <slot>
 
@@ -44,8 +44,5 @@ export default {
   border-radius: 12px;
   min-height: 100px;
   min-width: 300px;
-  display: flex;
-  flex-direction: column;
-  margin-bottom: auto;
 }
 </style>

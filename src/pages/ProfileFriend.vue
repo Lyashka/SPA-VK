@@ -316,7 +316,7 @@ export default {
     text-decoration: none;
     font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
     display: flex;
-    justify-content: center;
+    justify-content: flex-start;
   }
 
 </style>
