@@ -2,10 +2,10 @@
     <div class="main-container">
       <div>
       <div class="app__btns">
-          <div><my-button @click="buildListFriends" v-show="buildBtnVisible">Построить</my-button></div>
+          <div><my-button class="text_content" @click="buildListFriends" v-show="buildBtnVisible">Построить</my-button></div>
 
           <div>
-              <my-select v-model="selectedSort"
+              <my-select class="text_content" v-model="selectedSort"
                           :options="sortoption"
                           v-show="true"> 
                           
@@ -35,15 +35,15 @@
       </div>
      
       <my-sign-in-vue v-model:show="signInWindowVisible">
-            <h4 class="twxt_content">Войти в приложение</h4>
-            <div class="signIn_container"><a href="https://oauth.vk.com/authorize?client_id=51428350&display=popup&redirect_uri=https://lyashka.github.io/SPA-VK/&scope=friends&response_type=token&v=v=5.131"><my-button class="signInBtn" @click="showWindowHide">Войти</my-button></a></div>
+            <h4 class="text_content">Войти в приложение</h4>
+            <div class="signIn_container"><a class="text_content" href="https://oauth.vk.com/authorize?client_id=51428350&display=popup&redirect_uri=https://lyashka.github.io/SPA-VK/&scope=friends&response_type=token&v=v=5.131"><my-button class="signInBtn" @click="showWindowHide">Войти</my-button></a></div>
       </my-sign-in-vue>
       
 
       </div>
 
       <div class="exitBtn">
-          <my-button @click="exitCkick">Выйти</my-button>
+          <my-button class="text_content" @click="exitCkick">Выйти</my-button>
       </div>
     </div>
     
@@ -261,8 +261,7 @@
   }
   .twxt_content{
     font-size: 20px;
-    display: flex;
-    justify-content: center;
+   
   }
   .main-container{
     display: flex;
@@ -278,6 +277,12 @@
     position: fixed;
     display: flex;
     align-items: center;
+    justify-content: center;
+  }
+  .text_content{
+    text-decoration: none;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    display: flex;
     justify-content: center;
   }
   </style>

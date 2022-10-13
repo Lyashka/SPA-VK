@@ -4,7 +4,7 @@
             <img class="imgFriend" :src="friend.photo_50"/>
             <div class="borderBottomFriend">
                 <div class="containerFriend">
-                    <div>{{ friend.first_name }} {{ friend.last_name }}</div>
+                    <div class="text_content">{{ friend.first_name }} {{ friend.last_name }}</div>
                     <div class="mutual">{{ friend.mutual }}</div> 
                 </div>
                 
@@ -21,7 +21,7 @@
 export default {
     data() {
         return {
-            // mutualIndex: JSON.parse(localStorage.getItem('mutualCountsFriends')) 
+            
         }
     },
     props: {
@@ -74,4 +74,10 @@ export default {
     display: flex;
     
 }
+.text_content{
+    text-decoration: none;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    display: flex;
+    justify-content: center;
+  }
 </style>

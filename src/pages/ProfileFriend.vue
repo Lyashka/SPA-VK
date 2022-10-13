@@ -16,16 +16,16 @@
                         <div class="textContent">
                             {{ friend.first_name }} {{ friend.last_name }} 
                             <div class="itemContent">
-                                <div>
+                                <div class="text_conten_style">
                                     Пол: {{ sex }}
                                 </div>
-                                <div>
+                                <div class="text_conten_style">
                                     Взраст: {{ age }}
                                 </div>
-                                <div>
+                                <div class="text_conten_style">
                                     Количество друзей: {{ friendsCount }}
                                 </div>
-                                <div>
+                                <div class="text_conten_style">
                                     Общих друзей: {{ mutualFriendsCount }}
                                 </div>
                             </div>
@@ -311,6 +311,12 @@ export default {
   .text_content{
     margin-left: 20px;
     border-top: 1px solid rgba(0, 0, 0, 0.232);
+  }
+  .text_conten_style{
+    text-decoration: none;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    display: flex;
+    justify-content: center;
   }
 
 </style>
