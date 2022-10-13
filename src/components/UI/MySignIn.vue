@@ -12,6 +12,18 @@
 <script>
 export default {
   name: 'my-sigIn',
+  props: {
+    show: {
+      type: Boolean,
+      default: true
+    }
+  },
+
+  methods:{
+    hideWindow() {
+      this.$emit('update:show', true)
+    }
+  }
 
 }
 </script>
