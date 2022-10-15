@@ -16,7 +16,7 @@ export default {
     padding: 10px 15px;
     background: none;
     color: rgb(8, 30, 66);
-    border-radius: 12px;
+    border-radius: 5px;
     border: none;
     box-shadow: 0.3px 0.3px black;
     display: flex;
