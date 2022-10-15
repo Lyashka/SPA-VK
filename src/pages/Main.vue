@@ -2,12 +2,12 @@
   <div class="main-container">
     <div>
     <div class="app__btns">
-        <div><my-button class="text_content" @click="buildListFriends" v-show="buildBtnVisible">Построить</my-button></div>
-
+        <div><my-button class="text_content" @click="buildListFriends" v-show="buildBtnVisible">Начать работу</my-button></div>
+        
         <div>
             <my-select class="text_content" v-model="selectedSort"
                         :options="sortoption"
-                        v-show="true"> 
+                        v-show="visibleSelect"> 
                         
             </my-select>
         </div>
@@ -16,9 +16,9 @@
         
     <div class="container">
         <div>
-            <my-window-friend-list-vue >
+            <my-window-friend-list-vue v-show="VkFriendList">
               
-                  <friends-list-vue class="list_content" 
+                  <friends-list-vue
                         v-show="true"
                         :localStorageDataFriend="localStorageDataFriend"
                         >     
@@ -28,6 +28,7 @@
                   </PreLoader>
             </my-window-friend-list-vue>
         </div>
+        
     </div>
 
     <div class="addFriendList" @click="requestOffsetFriendList">
@@ -36,14 +37,16 @@
    
     <my-sign-in-vue v-model:show="signInWindowVisible">
           <h4 class="text_content">Войти в приложение</h4>
-          <div class="signIn_container"><a class="text_content"  href="https://oauth.vk.com/authorize?client_id=51428350&display=popup&redirect_uri=https://lyashka.github.io/SPA-VK/&scope=friends&response_type=token&v=v=5.131"><my-button class="signInBtn" @click="showWindowHide">Войти</my-button></a></div>
+          <div class="signIn_container"><a class="text_content"  href="https://oauth.vk.com/authorize?client_id=51428350&display=popup&redirect_uri=http://localhost:8080/SPA-VK/&scope=friends&users&response_type=token&v=v=5.131"><my-button class="signInBtn" @click="showWindowHide">Войти</my-button></a></div>
     </my-sign-in-vue>
     
 
     </div>
 
-    <div class="exitBtn">
-        <my-button class="text_content" @click="exitCkick">Выйти</my-button>
+    <div class="handlerBtn">
+        <!-- <my-button class="text_content" @click="openVkFriendList">Друзья Вконтакте</my-button> -->
+        <my-button class="text_content" @click="$router.push(`/friendList`)" style="margin-top: 10px" v-show="visibleBtnListFriend">Список друзей</my-button>
+        <my-button class="text_content" style="margin-top: 10px" @click="exitCkick">Выйти</my-button>
     </div>
   </div>
   
@@ -73,6 +76,7 @@ export default {
   
   data(){
     return{
+      inputId: undefined,
       offsetValueProfileFriend: 0,
       offsetBtn: '...',
       MyAccessToken: '',
@@ -92,10 +96,24 @@ export default {
       signInWindowVisible: true,
       buildBtnVisible: true,
       visiblePreLoader: false,
+      visibleFriendList: false,
+      VkFriendList: true,
+      visibleBtnListFriend: false,
+      visibleSelect: false,
     }
     
   },
-  methods: {  
+  methods: { 
+    // openVkFriendList(){
+    //   this.VkFriendList = true
+    //   this.visibleFriendList = false
+    // },
+
+    // openListFriend(){
+    //     this.visibleFriendList = true
+    //     this.VkFriendList = false
+    // },
+
     exitCkick() {
       this.buildBtnVisible = true
       localStorage.clear();
@@ -116,6 +134,10 @@ export default {
         this.selectedSort = ''
         this.buildBtnVisible = false
         localStorage.setItem('buildBtnVisible', this.buildBtnVisible)
+        this.visibleBtnListFriend = true
+        localStorage.setItem('visibleBtnListFriend', this.visibleBtnListFriend)
+        this.visibleSelect = true
+        localStorage.setItem('visibleSelect', this.visibleSelect)
     },
 
     requestFriendlList(){
@@ -176,15 +198,20 @@ export default {
      localStorage.setItem('token', token)
      this.MyAccessToken = token
     },
+
     getUrlParamUserId(){
     const url = window.location.href
      const userId = url.match(/(?:#|#.+&)user_id=([^&]+)/)[1]
     localStorage.setItem('userId', userId)
     this.source_uid_user = userId
-    }
+    },
+
   },
 
   mounted() {
+    this.visibleSelect = localStorage.getItem('visibleSelect')
+    this.visibleBtnListFriend = localStorage.getItem('visibleBtnListFriend')
+
     this.buildBtnVisible = localStorage.getItem('buildBtnVisible')
     if (this.buildBtnVisible == null){
       this.buildBtnVisible = true
@@ -267,7 +294,7 @@ export default {
   display: flex;
   justify-content: center;
 }
-.exitBtn{
+.handlerBtn{
   margin-left: 20px;
   margin-top: 70px
 }
@@ -286,5 +313,10 @@ export default {
   font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
   display: flex;
   justify-content: center;
+}
+.searchFriend{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
 }
 </style>

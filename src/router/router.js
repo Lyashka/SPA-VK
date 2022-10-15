@@ -3,6 +3,7 @@ import { def } from '@vue/shared'
 import { createRouter, createWebHistory } from 'vue-router'
 import ProfileFriend from '@/pages/ProfileFriend.vue'
 import Main from '@/pages/Main'
+import MyFriendList from '@/pages/MyFriendList'
 
 const routes = [
     {
@@ -13,6 +14,10 @@ const routes = [
         path: '/profile/:id',
         component: ProfileFriend
     },
+    {
+        path: '/friendList',
+        component: MyFriendList
+    }
    
 ]
 

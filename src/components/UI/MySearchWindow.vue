@@ -27,20 +27,20 @@
       border-radius: 12px;
       min-height: 390px;
       /* max-height: 710px; */
-      min-width: 500px;
-      max-width: 500px;
+      min-width: 300px;
+      max-width: 300px;
       position: relative;
       box-shadow: 1px 1px   rgba(0, 0, 0, 0.265);
   }
   input{
     margin-left: 30px;
   }
-  .topBar{
+  /* .topBar{
     height: 30px;
     display: flex;
     justify-content: end;
     border-bottom: 1px solid rgba(0, 0, 0, 0.18);
-  }
+  } */
   .addFriend{
     margin-right: 10px;
     background: none;
