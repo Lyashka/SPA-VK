@@ -7,17 +7,28 @@
             </div>
             <div>
                 <MySearchWindow>
+                   <searchFriendList :dataSearchUser="dataSearchUser"
+                                      @addUserInList="addUserInFriendList">
 
+                   </searchFriendList>
                 </MySearchWindow>  
             </div>
         </div>
        
+
         <div class="container_inside">
             <MyWindowFriendListVue>
+                <myFriendListUsers  v-if="friendList.length > 0"
+                                    :friendList="friendList"
+                                    @removeUser="removeUserInFriendList">
 
+                </myFriendListUsers>
+                <div v-else>
+                    Список пуст
+                </div>
             </MyWindowFriendListVue>  
             <div class="btn_options">
-                <MyButton >Построить</MyButton>
+                <MyButton @click="buildList">Построить</MyButton>
                 <MyButton  @click="$router.push(`/`)" style="margin-top: 10px">Назад</MyButton>  
             </div>
              
@@ -30,11 +41,15 @@ import { jsonp } from 'vue-jsonp'
 import MyWindowFriendListVue from '@/components/UI/MyWindowFriendList.vue'
 import MyButton from '@/components/UI/MyButton.vue'
 import MySearchWindow from '@/components/UI/MySearchWindow.vue'
+import searchFriendList from '@/components/searchFriendList/searchFriendList.vue'
+import myFriendListUsers from '@/components/myFriendListUsers/myFriendListUsers.vue'
 export default {
     components:{
         MyWindowFriendListVue,
         MyButton,
         MySearchWindow,
+        searchFriendList,
+        myFriendListUsers,
     },
 
     data(){
@@ -42,34 +57,86 @@ export default {
             inputId: undefined,
             userId: '',
             MyAccessToken: '',
+            requestUser: [],
+            dataSearchUser: [],
+            valueMutual: '',
+
+            friendList: [],
+            // friendlistForBuild: []
         }
     },
 
 
 
     methods:{
+        buildList(){
+            
+        },
+
+        addUserInFriendList(user){
+                for(let i = 0; i < this.friendList.length; i++){
+                   if(this.friendList[i].id === user.id){
+                    return
+                   }
+                }
+                this.friendList.push(user)
+                console.log(this.friendList);
+                localStorage.setItem('fiendList',  JSON.stringify(this.friendList))
+        },
+
+        removeUserInFriendList(user){
+                this.friendList = this.friendList.filter(u => u.id !== user.id)
+                localStorage.setItem('fiendList',  JSON.stringify(this.friendList))
+        },
         
-        searchFriend(){
-          if (this.inputId === undefined){
-            return console.log("Ошибка");
+       async searchFriend(){
+          if (this.inputId === undefined || this.inputId == 0){
+            this.dataSearchUser = []
+            console.log("Ошибка");
           }
           else{
-            jsonp('https://api.vk.com/method/users.get',{
+            await jsonp('https://api.vk.com/method/users.get',{
               user_id: this.inputId,
               access_token: this.MyAccessToken,
               v: '5.131',
-              fields: 'photo_200, sex, bdate, can_post',
+              fields: "photo_50",
             })
             .then(res => {
-              console.log(res);
+              this.requestUser = res.response
+            //   console.log(this.requestUser);
+              this.requestMutualFriends(this.requestUser)
             })
           }
-        }
+        },
+
+
+        async requestMutualFriends(value){
+            for (const item of value) {
+               await jsonp('https://api.vk.com/method/friends.getMutual?',
+              {
+                source_uid: `${ this.userId}`,
+                target_uid: `${item.id}`,
+                v: '5.131',
+                access_token: this.MyAccessToken
+              }).then(res => {
+                this.valueMutual = res.response.length
+                  item['mutual'] = this.valueMutual
+                  this.dataSearchUser = []
+                  this.dataSearchUser.push(item) 
+                
+              })
+            };
+                  console.log(this.dataSearchUser);   
+        },
+
     },
+
+
 
     mounted(){
         this.userId = localStorage.getItem('userId')
         this.MyAccessToken = localStorage.getItem('token')
+        this.friendList = JSON.parse(localStorage.getItem('fiendList'))
     }
 }
 </script>
@@ -122,6 +189,6 @@ export default {
     margin-left: 10px;
     margin-top: 10px;
     flex-direction: column;
- 
 }
+
 </style>

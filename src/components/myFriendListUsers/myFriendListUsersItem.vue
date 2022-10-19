@@ -1,0 +1,84 @@
+<template>
+    <div>
+        <!-- @click="$router.push(`/profile/${user.id}`)" -->
+        <button class="container" >
+            <img class="imgFriend" :src="user.photo_50"/>
+            <div class="borderBottomFriend">
+                <div class="containerFriend">
+                    <div class="text_content">{{ user.first_name }} {{ user.last_name }}</div>
+                    <div class="mutual">{{ user.mutual }}</div> 
+                    <button @click="$emit('removeUser', user)">У</button>
+                </div>
+            </div>
+        </button>
+
+       
+    </div>
+ 
+</template>
+
+<script>
+
+export default {
+    data() {
+        return {
+            
+        }
+    },
+    props: {
+        user: {
+            type: Object,
+        },
+    },
+    mounted() {
+
+    }
+}
+</script>
+
+<style scoped>
+.container{
+    height: 45px;
+    padding-left: 15px;
+    /* border-bottom: 1px solid black; */
+    display: flex;
+    align-items: center;
+    font-size: 18px;
+    width: 100%;
+    background: none;
+    border: none;
+}
+.container:hover{
+    background-color: #0000003b;
+}
+.imgFriend{
+    padding: 5px;
+    border-radius: 30px;
+    height: 40px;
+}
+.borderBottomFriend{
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid #0000003b;
+    height: 100%;
+    width: 100%;
+    padding-left: 10px;
+    
+}
+.containerFriend{
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+}
+.mutual{
+    margin-right: 15px;
+    display: flex;
+    
+}
+.text_content{
+    text-decoration: none;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    display: flex;
+    justify-content: center;
+  }
+</style>
