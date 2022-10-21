@@ -7,11 +7,9 @@
         <div>
             <my-select class="text_content" v-model="selectedSort"
                         :options="sortoption"
-                        v-show="visibleSelect"> 
-                        
+                        v-show="visibleSelect">        
             </my-select>
         </div>
-       
     </div>
         
     <div class="container">
@@ -100,19 +98,12 @@ export default {
       VkFriendList: true,
       visibleBtnListFriend: false,
       visibleSelect: false,
+      linkValue: '/'
     }
     
   },
   methods: { 
-    // openVkFriendList(){
-    //   this.VkFriendList = true
-    //   this.visibleFriendList = false
-    // },
-
-    // openListFriend(){
-    //     this.visibleFriendList = true
-    //     this.VkFriendList = false
-    // },
+   
 
     exitCkick() {
       this.buildBtnVisible = true
@@ -151,7 +142,6 @@ export default {
             }).then(res => {
               this.dataFriends = res.response.items;
               this.requestMutualFriends(this.dataFriends)
-             
             })
     },
 
@@ -209,6 +199,9 @@ export default {
   },
 
   mounted() {
+    this.linkValue = '/'
+    localStorage.setItem('linkValue', this.linkValue)
+
     this.visibleSelect = localStorage.getItem('visibleSelect')
     this.visibleBtnListFriend = localStorage.getItem('visibleBtnListFriend')
 

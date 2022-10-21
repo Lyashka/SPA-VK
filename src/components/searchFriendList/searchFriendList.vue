@@ -2,12 +2,13 @@
     <div>
       <div>
           <transition-group name="friend-list">
-              <search-friend-list-item v-for="user in dataSearchUser"
+              <searchFriendListItem v-for="user in dataSearchUser"
                                   :user="user"
                                   :key="user.id"
+                                  
                                   @addUserInList="$emit('addUserInList', user)"
                                   >
-              </search-friend-list-item>
+              </searchFriendListItem>
           </transition-group>
       </div>
      

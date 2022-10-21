@@ -1,6 +1,6 @@
 <template>
   <div class="btnContainer">
-    <div><my-button-vue @click="$router.push(`/`)" class="btn"> Назад </my-button-vue></div>
+    <div><my-button-vue @click="$router.push(`${linkValue}`)" class="btn"> Назад </my-button-vue></div>
   </div>
   <my-profile-friend-vue>
     <div class="container">
@@ -58,7 +58,7 @@
 
                     </friends-list-item>
                 </div>
-                <div  iv class="addFriendList" @click="requestOffsetFriendList">
+                <div   class="addFriendList" @click="requestOffsetFriendList">
                         <div>Ещё..</div> 
                 </div>
             </div>
@@ -101,6 +101,7 @@ export default {
         visiblePreLoaderPosts: false,
         visiblePreLoaderFriends: false,
         myUserId: '',
+        linkValue: localStorage.getItem('linkValue')
         }
     },
 
@@ -211,6 +212,7 @@ export default {
       }
     },
     mounted() {
+        // console.log(`${this.$route.params}`);
         this.myUserId = localStorage.getItem('userId')
         console.log(this.myUserId);
         this.requestFriendsUser()

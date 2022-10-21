@@ -7,7 +7,7 @@
                 <div class="containerFriend">
                     <div class="text_content">{{ user.first_name }} {{ user.last_name }}</div>
                     <div class="mutual">{{ user.mutual }}</div> 
-                    <button @click="$emit('addUserInList', user)">Д</button>
+                    <button class="imgBtn" @click="$emit('addUserInList', user)"><img class="addUserBtn" src="@/components/assets/plus.png"></button>
                 </div>
                 
             </div>
@@ -31,6 +31,7 @@ export default {
             type: Object,
         },
     },
+    
     mounted() {
 
     }
@@ -50,7 +51,7 @@ export default {
     border: none;
 }
 .container:hover{
-    background-color: #0000003b;
+    /* background-color: #0000003b; */
 }
 .imgFriend{
     padding: 5px;
@@ -81,5 +82,19 @@ export default {
     font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
     display: flex;
     justify-content: center;
+  }
+  .addUserBtn{
+    height: 20px;
+    width: 20px;
+  }
+  .imgBtn{
+    text-decoration: none;
+    background: transparent;
+    border: none;
+    margin-right: 10px;
+  }
+  .imgBtn:hover{
+    background-color: rgba(67, 63, 105, 0.292);
+    border-radius: 10px;
   }
 </style>

@@ -2,7 +2,7 @@
   <div class="container">
         <div class="search_container">
             <div class="searchFriend">
-                <input class="inputSearch" placeholder="Введите имя" v-model="inputId"/>
+                <input class="inputSearch" placeholder="Введите id пользователя" v-model="inputId"/>
                 <MyButton @click="searchFriend" class="searchBtn">Найти</MyButton>
             </div>
             <div>
@@ -15,24 +15,34 @@
             </div>
         </div>
        
-
+        <div class="container_rigth_window">
+            <div class="selectStyle">
+                <MySelect class="text_content" v-model="selectedSort"
+                        :options="sortoption"
+                        v-show="true">        
+                </MySelect>
+            </div>
         <div class="container_inside">
             <MyWindowFriendListVue>
                 <myFriendListUsers  v-if="friendList.length > 0"
                                     :friendList="friendList"
                                     @removeUser="removeUserInFriendList">
-
                 </myFriendListUsers>
+
+                <div class="text_Content" v-else-if="friendList.length == 0">
+                   {{ valueTextElse }} 
+                </div>
                 <div v-else>
                     Список пуст
                 </div>
             </MyWindowFriendListVue>  
             <div class="btn_options">
-                <MyButton @click="buildList">Построить</MyButton>
+                <MyButton @click="buildList" :class="disabledBtn">Построить</MyButton>
                 <MyButton  @click="$router.push(`/`)" style="margin-top: 10px">Назад</MyButton>  
             </div>
              
         </div>
+    </div>
   </div>
 </template>
 
@@ -43,6 +53,7 @@ import MyButton from '@/components/UI/MyButton.vue'
 import MySearchWindow from '@/components/UI/MySearchWindow.vue'
 import searchFriendList from '@/components/searchFriendList/searchFriendList.vue'
 import myFriendListUsers from '@/components/myFriendListUsers/myFriendListUsers.vue'
+import MySelect from '@/components/UI/MySelect.vue'
 export default {
     components:{
         MyWindowFriendListVue,
@@ -50,6 +61,7 @@ export default {
         MySearchWindow,
         searchFriendList,
         myFriendListUsers,
+        MySelect,
     },
 
     data(){
@@ -60,9 +72,18 @@ export default {
             requestUser: [],
             dataSearchUser: [],
             valueMutual: '',
-
+            valueTextElse: '',
+            // buildVisible: true,
             friendList: [],
-            // friendlistForBuild: []
+            disabledBtn: 'all',
+
+            selectedSort: '',
+            sortoption: [
+            {value: 'first_name', name: 'По имени'},
+            {value: 'last_name', name: 'По фамилии'},
+            {value: 'mutual', name: 'Общие друзья'}
+            ],
+            linkValue: '/',
         }
     },
 
@@ -70,7 +91,12 @@ export default {
 
     methods:{
         buildList(){
-            
+            try {
+                this.friendList = JSON.parse(localStorage.getItem('fiendList'))
+
+            } catch (error) {
+                console.log(error);
+            }
         },
 
         addUserInFriendList(user){
@@ -80,13 +106,21 @@ export default {
                    }
                 }
                 this.friendList.push(user)
-                console.log(this.friendList);
                 localStorage.setItem('fiendList',  JSON.stringify(this.friendList))
+                if(this.friendList != '[]'){
+                    this.disabledBtn = 'all'
+                }
         },
 
         removeUserInFriendList(user){
                 this.friendList = this.friendList.filter(u => u.id !== user.id)
                 localStorage.setItem('fiendList',  JSON.stringify(this.friendList))
+                
+                if(localStorage.getItem('fiendList') == '[]'){
+                    localStorage.removeItem('fiendList')
+                    this.valueTextElse = 'Список пуст'
+                    this.disabledBtn = 'disabled'
+                }
         },
         
        async searchFriend(){
@@ -103,7 +137,6 @@ export default {
             })
             .then(res => {
               this.requestUser = res.response
-            //   console.log(this.requestUser);
               this.requestMutualFriends(this.requestUser)
             })
           }
@@ -131,12 +164,34 @@ export default {
 
     },
 
-
-
+    watch: {
+    selectedSort(newValue){
+        if(newValue != 'mutual'){
+        this.friendList.sort( (friend1, friend2) => {
+          return friend1[newValue]?.localeCompare(friend2[newValue])
+          })
+        }else if(newValue == 'mutual'){
+          this.friendList.sort((friend1, friend2)=> {
+          return friend2.mutual - friend1.mutual  
+          }) 
+        }
+    }
+  },
+    
     mounted(){
+        this.linkValue = '/friendList'
+        localStorage.setItem('linkValue', this.linkValue)
+
+        if(this.friendList == []  || localStorage.getItem('fiendList') == null || localStorage.getItem('fiendList') == '[]' ){
+            this.valueTextElse = 'Список пуст'
+            this.disabledBtn = 'disabled'
+        }
+        else if(localStorage.getItem('fiendList') != '[]' || this.friendList != []){
+            this.valueTextElse = 'Нажмите "Построить"'
+            this.disabledBtn = 'all'
+        }   
         this.userId = localStorage.getItem('userId')
         this.MyAccessToken = localStorage.getItem('token')
-        this.friendList = JSON.parse(localStorage.getItem('fiendList'))
     }
 }
 </script>
@@ -171,7 +226,7 @@ export default {
     
 }
 .container_inside{
-    margin-top: 30px;
+    /* margin-top: 30px; */
     display: flex;
     flex-direction: row;
 }
@@ -190,5 +245,27 @@ export default {
     margin-top: 10px;
     flex-direction: column;
 }
-
+.text_Content{
+    padding-left: 10px;
+    padding-top: 5px;
+    font-size: 20px;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+}
+.disabled{
+    pointer-events: none;
+    background-color: rgba(47, 60, 78, 0.218);
+}
+.container_rigth_window{
+    display: flex;
+    flex-direction: column;
+}
+.selectStyle{
+  min-width: 80px;
+  min-height: 20px;
+  text-decoration: none;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  display: flex;
+  justify-content:flex-start;
+  margin-left: 25px;
+}
 </style>
