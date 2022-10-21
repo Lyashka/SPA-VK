@@ -2,7 +2,7 @@
   <div class="container">
         <div class="search_container">
             <div class="searchFriend">
-                <input class="inputSearch" placeholder="Введите id пользователя" v-model="inputId"/>
+                <input class="inputSearch" placeholder="Введите id/userName" v-model="inputId"/>
                 <MyButton @click="searchFriend" class="searchBtn">Найти</MyButton>
             </div>
             <div>
@@ -17,9 +17,12 @@
        
         <div class="container_rigth_window">
             <div class="selectStyle">
-                <MySelect class="text_content" v-model="selectedSort"
+                <MySelect 
+                        :class="disabledSelect"
+                        v-model="selectedSort"
                         :options="sortoption"
-                        v-show="true">        
+                        v-show="true"
+                        style="font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;">        
                 </MySelect>
             </div>
         <div class="container_inside">
@@ -84,6 +87,7 @@ export default {
             {value: 'mutual', name: 'Общие друзья'}
             ],
             linkValue: '/',
+            disabledSelect: 'disabled',
         }
     },
 
@@ -93,23 +97,30 @@ export default {
         buildList(){
             try {
                 this.friendList = JSON.parse(localStorage.getItem('fiendList'))
-
+                this.disabledSelect = 'all'
             } catch (error) {
                 console.log(error);
             }
         },
 
         addUserInFriendList(user){
+            if(JSON.parse(localStorage.getItem('fiendList')) !== null){
+                this.friendList = JSON.parse(localStorage.getItem('fiendList'))
+            }
                 for(let i = 0; i < this.friendList.length; i++){
                    if(this.friendList[i].id === user.id){
                     return
                    }
                 }
                 this.friendList.push(user)
+            
+                
                 localStorage.setItem('fiendList',  JSON.stringify(this.friendList))
+                this.disabledSelect = 'all'
                 if(this.friendList != '[]'){
                     this.disabledBtn = 'all'
-                }
+                }  
+               
         },
 
         removeUserInFriendList(user){
@@ -133,11 +144,12 @@ export default {
               user_id: this.inputId,
               access_token: this.MyAccessToken,
               v: '5.131',
-              fields: "photo_50",
+              fields: "photo_50, screen_name",
             })
             .then(res => {
               this.requestUser = res.response
               this.requestMutualFriends(this.requestUser)
+              console.log(res.response);
             })
           }
         },
@@ -182,11 +194,11 @@ export default {
         this.linkValue = '/friendList'
         localStorage.setItem('linkValue', this.linkValue)
 
-        if(this.friendList == []  || localStorage.getItem('fiendList') == null || localStorage.getItem('fiendList') == '[]' ){
+        if(this.friendList == []  || localStorage.getItem('fiendList') == null || JSON.parse(localStorage.getItem('fiendList') == [] )){
             this.valueTextElse = 'Список пуст'
             this.disabledBtn = 'disabled'
         }
-        else if(localStorage.getItem('fiendList') != '[]' || this.friendList != []){
+        else if(JSON.parse(localStorage.getItem('fiendList')) != [] || this.friendList != []){
             this.valueTextElse = 'Нажмите "Построить"'
             this.disabledBtn = 'all'
         }   

@@ -36,7 +36,7 @@ export default {
     },
     computed:{
         backgroundUserpanel(){
-            let res = this.user.mutual / (this.friendList.length * 3)
+            let res = this.user.mutual / (this.friendList.length * 7)
             return 'background-color:  rgba(0, 162  , 251, ' + res + ' )'
         }
     }

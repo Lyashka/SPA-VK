@@ -26,21 +26,15 @@
       background-color:aliceblue;
       border-radius: 12px;
       min-height: 390px;
-      /* max-height: 710px; */
-      min-width: 300px;
-      max-width: 300px;
+      min-width: 350px;
+      max-width: 350px;
       position: relative;
       box-shadow: 1px 1px   rgba(0, 0, 0, 0.265);
   }
   input{
     margin-left: 30px;
   }
-  /* .topBar{
-    height: 30px;
-    display: flex;
-    justify-content: end;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.18);
-  } */
+
   .addFriend{
     margin-right: 10px;
     background: none;

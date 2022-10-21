@@ -7,9 +7,8 @@
                 <div class="containerFriend">
                     <div class="text_content">{{ user.first_name }} {{ user.last_name }}</div>
                     <div class="mutual">{{ user.mutual }}</div> 
-                    <button class="imgBtn" @click="$emit('addUserInList', user)"><img class="addUserBtn" src="@/components/assets/plus.png"></button>
                 </div>
-                
+                <button class="imgBtn" @click="$emit('addUserInList', user)"><img class="addUserBtn" src="@/components/assets/plus.png"></button> 
             </div>
         </button>
 
@@ -75,13 +74,16 @@ export default {
 .mutual{
     margin-right: 15px;
     display: flex;
-    
+    align-items: center;
+    justify-content: flex-end;
 }
 .text_content{
     text-decoration: none;
     font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
     display: flex;
     justify-content: center;
+    align-items: center;
+
   }
   .addUserBtn{
     height: 20px;
