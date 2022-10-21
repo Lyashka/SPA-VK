@@ -39,7 +39,7 @@ export default {
 
 <style scoped>
 .container{
-    height: 45px;
+    height: 50px;
     padding-left: 15px;
     /* border-bottom: 1px solid black; */
     display: flex;

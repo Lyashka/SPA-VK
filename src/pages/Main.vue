@@ -219,7 +219,6 @@ export default {
       this.signInWindowVisible = true
     }
     this.localStorageDataFriend = JSON.parse(localStorage.getItem('localStorageDataFriend'))   
-    console.log(this.signInWindowVisible);
     },
 
   watch: {
@@ -269,7 +268,7 @@ export default {
   border-radius: 6px;
 }
 .addFriendList:hover{
-  background-color:#0000003b;
+  background-color: rgb(196, 217, 234);
 }
 .signInBtn{
   display: flex;
@@ -294,10 +293,6 @@ export default {
 .preLoader{
   margin-left: 200px;
   margin-top: 100px;
-  position: fixed;
-  display: flex;
-  align-items: center;
-  justify-content: center;
 }
 .text_content{
   min-width: 80px;

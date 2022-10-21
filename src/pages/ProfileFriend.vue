@@ -212,9 +212,7 @@ export default {
       }
     },
     mounted() {
-        // console.log(`${this.$route.params}`);
         this.myUserId = localStorage.getItem('userId')
-        console.log(this.myUserId);
         this.requestFriendsUser()
         this.requestUserGet()
         this.requestMutualFriends()

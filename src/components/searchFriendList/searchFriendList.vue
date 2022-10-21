@@ -2,7 +2,8 @@
     <div>
       <div>
           <transition-group name="friend-list">
-              <searchFriendListItem v-for="user in dataSearchUser"
+              <searchFriendListItem 
+                                  v-for="user in dataSearchUser"
                                   :user="user"
                                   :key="user.id"
                                   
@@ -74,4 +75,6 @@
   .friend-list-complete-leave-active {
     position: absolute;
   }
+  
+  
   </style>

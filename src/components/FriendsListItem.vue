@@ -48,7 +48,7 @@ export default {
     border: none;
 }
 .container:hover{
-    background-color: #0000003b;
+    background-color: rgb(196, 217, 234);
 }
 .imgFriend{
     padding: 5px;

@@ -47,4 +47,7 @@
     background-color: rgba(0, 0, 0, 0.185);
     border-radius: 3px;
   }
+  .topBar{
+    height: 15px;
+  }
   </style>

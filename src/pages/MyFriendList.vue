@@ -2,16 +2,26 @@
   <div class="container">
         <div class="search_container">
             <div class="searchFriend">
-                <input class="inputSearch" placeholder="Введите id/userName" v-model="inputId"/>
+                <input class="inputSearch" placeholder="Введите имя" v-model="inputId"/>
                 <MyButton @click="searchFriend" class="searchBtn">Найти</MyButton>
             </div>
             <div>
                 <MySearchWindow>
-                   <searchFriendList :dataSearchUser="dataSearchUser"
-                                      @addUserInList="addUserInFriendList">
+                    <PreLoader class="preLoader"  v-show="preLoaderVisiblde">
 
+                    </PreLoader>
+                   <searchFriendList  
+                                      :dataSearchUser="dataSearchUser"
+                                      @addUserInList="addUserInFriendList">
                    </searchFriendList>
-                </MySearchWindow>  
+                   <div class="userNotFound">
+                    {{ userNotFound }}
+                   </div>
+                   
+                </MySearchWindow>
+                <div class="addFriendList" @click="requestOffsetFriendList" v-show="visibleAddFriendList">
+                    <div>...</div> 
+                </div>  
             </div>
         </div>
        
@@ -30,14 +40,15 @@
                 <myFriendListUsers  v-if="friendList.length > 0"
                                     :friendList="friendList"
                                     @removeUser="removeUserInFriendList">
+                                    
                 </myFriendListUsers>
-
                 <div class="text_Content" v-else-if="friendList.length == 0">
                    {{ valueTextElse }} 
                 </div>
                 <div v-else>
                     Список пуст
                 </div>
+                
             </MyWindowFriendListVue>  
             <div class="btn_options">
                 <MyButton @click="buildList" :class="disabledBtn">Построить</MyButton>
@@ -57,15 +68,17 @@ import MySearchWindow from '@/components/UI/MySearchWindow.vue'
 import searchFriendList from '@/components/searchFriendList/searchFriendList.vue'
 import myFriendListUsers from '@/components/myFriendListUsers/myFriendListUsers.vue'
 import MySelect from '@/components/UI/MySelect.vue'
+import PreLoader from '@/components/UI/PreLoader.vue'
 export default {
     components:{
-        MyWindowFriendListVue,
-        MyButton,
-        MySearchWindow,
-        searchFriendList,
-        myFriendListUsers,
-        MySelect,
-    },
+    MyWindowFriendListVue,
+    MyButton,
+    MySearchWindow,
+    searchFriendList,
+    myFriendListUsers,
+    MySelect,
+    PreLoader
+},
 
     data(){
         return{
@@ -76,7 +89,6 @@ export default {
             dataSearchUser: [],
             valueMutual: '',
             valueTextElse: '',
-            // buildVisible: true,
             friendList: [],
             disabledBtn: 'all',
 
@@ -88,6 +100,10 @@ export default {
             ],
             linkValue: '/',
             disabledSelect: 'disabled',
+            countOffsetSearchusers: 0,
+            visibleAddFriendList: false,
+            preLoaderVisiblde: false,
+            userNotFound: ''
         }
     },
 
@@ -131,32 +147,44 @@ export default {
                     localStorage.removeItem('fiendList')
                     this.valueTextElse = 'Список пуст'
                     this.disabledBtn = 'disabled'
+                    this.disabledSelect = 'disabled'
                 }
         },
         
        async searchFriend(){
+          this.dataSearchUser = []
+          this. countOffsetSearchusers = 0
+          this.preLoaderVisiblde = true
+          this.userNotFound = ''
           if (this.inputId === undefined || this.inputId == 0){
             this.dataSearchUser = []
+            this.visibleAddFriendList = false
+            this.preLoaderVisiblde = false
             console.log("Ошибка");
           }
           else{
-            await jsonp('https://api.vk.com/method/users.get',{
-              user_id: this.inputId,
+            await jsonp('https://api.vk.com/method/users.search',{
+                q: this.inputId,
               access_token: this.MyAccessToken,
+              count: '8',
               v: '5.131',
               fields: "photo_50, screen_name",
             })
             .then(res => {
-              this.requestUser = res.response
+                    if(res.response.items.length == 0){
+                        this.userNotFound = 'Пользователь не найден...'
+                    }
+              this.requestUser = res.response.items
               this.requestMutualFriends(this.requestUser)
-              console.log(res.response);
+              this.visibleAddFriendList = true
+              this.preLoaderVisiblde = false
             })
           }
         },
 
 
         async requestMutualFriends(value){
-            for (const item of value) {
+            for (let item of value) {
                await jsonp('https://api.vk.com/method/friends.getMutual?',
               {
                 source_uid: `${ this.userId}`,
@@ -164,14 +192,27 @@ export default {
                 v: '5.131',
                 access_token: this.MyAccessToken
               }).then(res => {
-                this.valueMutual = res.response.length
-                  item['mutual'] = this.valueMutual
-                  this.dataSearchUser = []
+                  this.valueMutual = res.response.length
+                  item['mutual'] = this.valueMutual  
                   this.dataSearchUser.push(item) 
                 
               })
-            };
-                  console.log(this.dataSearchUser);   
+            };  
+        },
+
+        async requestOffsetFriendList(){
+            this.countOffsetSearchusers += 8
+            await jsonp('https://api.vk.com/method/users.search',{
+              q: this.inputId,
+              access_token: this.MyAccessToken,
+              count: '8',
+              offset: String(this.countOffsetSearchusers),
+              v: '5.131',
+              fields: "photo_50",
+            })
+            .then(res => {
+              this.requestMutualFriends(res.response.items)
+            })
         },
 
     },
@@ -214,7 +255,7 @@ export default {
     display: flex;
     /* justify-content: center; */
     flex-direction: row;
-    align-items: center;
+    /* align-items: center; */
     justify-content: center;
     
 }
@@ -241,6 +282,7 @@ export default {
     /* margin-top: 30px; */
     display: flex;
     flex-direction: row;
+    align-items: flex-start;
 }
 /* .backBtn{
     margin-top: 0;
@@ -279,5 +321,29 @@ export default {
   display: flex;
   justify-content:flex-start;
   margin-left: 25px;
+}
+.addFriendList{
+  margin: auto;
+  margin-top: 5px;
+  margin-bottom: 20px;
+  width: 350px;
+  height: 25px;
+  background-color:aliceblue;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 1px 1px  rgba(0, 0, 0, 0.258);
+  border-radius: 6px;
+}
+.addFriendList:hover{
+    background-color: rgb(196, 217, 234);
+}
+.preLoader{
+  position:absolute;
+  margin-top: 100px;
+  margin-left: 130px;
+}
+.userNotFound{
+    margin-left: 10px;
 }
 </style>
