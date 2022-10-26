@@ -2,7 +2,7 @@
   <div class="container">
         <div class="search_container">
             <div class="searchFriend">
-                <input class="inputSearch" placeholder="Введите имя" v-model="inputId"/>
+                <input type="text"  class="inputSearch" placeholder="Введите имя" v-model="inputId"/>
                 <MyButton @click="searchFriend" class="searchBtn">Найти</MyButton>
             </div>
             <div>
@@ -152,6 +152,8 @@ export default {
         },
         
        async searchFriend(){
+
+          console.log(typeof this.inputId);
           this.dataSearchUser = []
           this. countOffsetSearchusers = 0
           this.preLoaderVisiblde = true
@@ -164,20 +166,27 @@ export default {
           }
           else{
             await jsonp('https://api.vk.com/method/users.search',{
-                q: this.inputId,
+              q: this.inputId,
               access_token: this.MyAccessToken,
               count: '8',
               v: '5.131',
               fields: "photo_50, screen_name",
             })
             .then(res => {
+                 try {
                     if(res.response.items.length == 0){
                         this.userNotFound = 'Пользователь не найден...'
-                    }
-              this.requestUser = res.response.items
-              this.requestMutualFriends(this.requestUser)
-              this.visibleAddFriendList = true
-              this.preLoaderVisiblde = false
+                    }       
+                    this.requestUser = res.response.items
+                    this.requestMutualFriends(this.requestUser)
+                    this.visibleAddFriendList = true
+                } 
+                catch (error) {
+                    console.log(error);
+                    this.userNotFound = 'Произошла ошибка, попробуйте сделать запрос еще раз'
+                    this.preLoaderVisiblde = false
+                }
+             
             })
           }
         },
@@ -195,9 +204,11 @@ export default {
                   this.valueMutual = res.response.length
                   item['mutual'] = this.valueMutual  
                   this.dataSearchUser.push(item) 
+                  
                 
               })
             };  
+            this.preLoaderVisiblde = false
         },
 
         async requestOffsetFriendList(){

@@ -2,7 +2,7 @@
   <div class="main-container">
     <div>
     <div class="app__btns">
-        <div><my-button class="text_content" @click="buildListFriends" v-show="buildBtnVisible">Начать работу</my-button></div>
+        <!-- <div><my-button class="text_content" @click="buildListFriends" v-show="buildBtnVisible">Начать работу</my-button></div> -->
         
         <div>
             <my-select class="text_content" v-model="selectedSort"
@@ -42,7 +42,6 @@
     </div>
 
     <div class="handlerBtn">
-        <!-- <my-button class="text_content" @click="openVkFriendList">Друзья Вконтакте</my-button> -->
         <my-button class="text_content" @click="$router.push(`/friendList`)" style="margin-top: 10px" v-show="visibleBtnListFriend">Список друзей</my-button>
         <my-button class="text_content" style="margin-top: 10px" @click="exitCkick">Выйти</my-button>
     </div>
@@ -118,17 +117,17 @@ export default {
 
 
     buildListFriends(){
-        this.getUrlParamUserId()
-        this.getUrlParam()
-        this.requestFriendlList();
-        this.selectVisible = true,
-        this.selectedSort = ''
-        this.buildBtnVisible = false
-        localStorage.setItem('buildBtnVisible', this.buildBtnVisible)
-        this.visibleBtnListFriend = true
-        localStorage.setItem('visibleBtnListFriend', this.visibleBtnListFriend)
-        this.visibleSelect = true
-        localStorage.setItem('visibleSelect', this.visibleSelect)
+        // this.getUrlParamUserId()
+        // this.getUrlParam()
+        // this.requestFriendlList();
+        // this.selectVisible = true,
+        // this.selectedSort = ''
+        // this.buildBtnVisible = false
+        // localStorage.setItem('buildBtnVisible', this.buildBtnVisible)
+        // this.visibleBtnListFriend = true
+        // localStorage.setItem('visibleBtnListFriend', this.visibleBtnListFriend)
+        // this.visibleSelect = true
+        // localStorage.setItem('visibleSelect', this.visibleSelect)
     },
 
     requestFriendlList(){
@@ -199,6 +198,9 @@ export default {
   },
 
   mounted() {
+    this.signInWindowVisible = localStorage.getItem('signInWindowVisible')
+    console.log(this.signInWindowVisible);
+
     this.linkValue = '/'
     localStorage.setItem('linkValue', this.linkValue)
 
@@ -212,12 +214,32 @@ export default {
       this.buildBtnVisible = false
     }
 
-    this.signInWindowVisible = localStorage.getItem('signInWindowVisible')
+    
     this.MyAccessToken = localStorage.getItem('token')
     this.source_uid_user = localStorage.getItem('userId')
+
     if(this.signInWindowVisible == null){
       this.signInWindowVisible = true
     }
+    else if(this.signInWindowVisible == 'false'){
+        if(localStorage.getItem('token') == null || localStorage.getItem('userId') == null){
+          this.getUrlParamUserId()
+          this.getUrlParam()
+          this.requestFriendlList();
+        }
+        this.selectVisible = true,
+        this.selectedSort = ''
+        this.buildBtnVisible = false
+        localStorage.setItem('buildBtnVisible', this.buildBtnVisible)
+        this.visibleBtnListFriend = true
+        localStorage.setItem('visibleBtnListFriend', this.visibleBtnListFriend)
+        this.visibleSelect = true
+        localStorage.setItem('visibleSelect', this.visibleSelect)
+    }
+    else{
+       
+    }
+
     this.localStorageDataFriend = JSON.parse(localStorage.getItem('localStorageDataFriend'))   
     },
 
