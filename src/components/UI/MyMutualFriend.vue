@@ -2,6 +2,9 @@
     <div>
           <div  class="dialog__content">
               <div class="topBar">
+                <div class="text_content">
+                  Друзья
+                </div>
               </div>
               <slot> </slot>
           </div>
@@ -45,6 +48,15 @@
     border-radius: 3px;
   }
   .topBar{
-    height: 15px;
+    height: 30px;
+    display: flex;
+    justify-content: end;
+    /* border-bottom: 1px solid rgba(0, 0, 0, 0.18); */
+    align-items: center;
+  }
+  .text_content{
+    margin-right: 5px;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+
   }
   </style>

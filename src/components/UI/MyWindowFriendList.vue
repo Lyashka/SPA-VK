@@ -2,7 +2,10 @@
     <div>
           <div  class="dialog__content">
               <div class="topBar">
-                
+                <div class="text_content">
+                  Исходный
+                </div>
+               
               </div>
               <slot> </slot>
           </div>
@@ -40,6 +43,7 @@
     display: flex;
     justify-content: end;
     border-bottom: 1px solid rgba(0, 0, 0, 0.18);
+    align-items: center;
   }
   .addFriend{
     margin-right: 10px;
@@ -52,5 +56,10 @@
   .addFriend:hover{
     background-color: rgba(0, 0, 0, 0.185);
     border-radius: 3px;
+  }
+  .text_content{
+    margin-right: 5px;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+
   }
   </style>

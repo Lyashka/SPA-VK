@@ -58,9 +58,9 @@
 
                     </friends-list-item>
                 </div>
-                <div   class="addFriendList" @click="requestOffsetFriendList">
+                <!-- <div   class="addFriendList" @click="requestOffsetFriendList">
                         <div>Ещё..</div> 
-                </div>
+                </div> -->
             </div>
     </div>
     </my-profile-friend-vue>

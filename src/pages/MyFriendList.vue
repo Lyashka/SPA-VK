@@ -30,13 +30,14 @@
                 <MySelect 
                         :class="disabledSelect"
                         v-model="selectedSort"
-                        :options="sortoption"
+                        :options="sortoptionFriendList"
                         v-show="true"
                         style="font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;">        
                 </MySelect>
             </div>
         <div class="container_inside">
             <MyWindowFriendListVue>
+                
                 <myFriendListUsers  v-if="friendList.length > 0"
                                     :friendList="friendList"
                                     @removeUser="removeUserInFriendList">
@@ -126,6 +127,10 @@ export default {
 
             selectedSort: '',
             selectedSortFriends: '',
+            sortoptionFriendList: [
+            {value: 'first_name', name: 'По имени'},
+            {value: 'last_name', name: 'По фамилии'},
+            ],
             sortoption: [
             {value: 'first_name', name: 'По имени'},
             {value: 'last_name', name: 'По фамилии'},
@@ -269,8 +274,8 @@ export default {
 
         // Удалить друга из списка
         removeUserInFriendList(user){
-            this.preLoaderVisibldeFriendList = true
             this.friendList = this.friendList.filter(u => u.id !== user.id)
+            this.preLoaderVisibldeFriendList = true
             jsonp('https://api.vk.com/method/friends.search?', //поиск друзей добавленного друга
             {
                 user_id: `${user.id}`,
@@ -298,8 +303,6 @@ export default {
                     })
                     
                 })
-
-                // console.log(this.pullAllFriendsInList);
                 this.preLoaderVisibldeFriendList = false
                 })
 
@@ -322,6 +325,7 @@ export default {
                 this.disabledSelect = 'disabled'
             } 
             localStorage.setItem('pullAllFriendsInList', JSON.stringify(this.pullAllFriendsInList))
+           
         },
         
 

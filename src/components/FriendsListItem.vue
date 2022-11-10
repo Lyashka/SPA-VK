@@ -1,6 +1,6 @@
 <template>
     <div>
-        <button class="container" @click="$router.push(`/profile/${friend.id}`)">
+        <button class="container disabled" @click="$router.push(`/profile/${friend.id}`)">
             <img class="imgFriend" :src="friend.photo_50"/>
             <div class="borderBottomFriend">
                 <div class="containerFriend">
@@ -79,5 +79,8 @@ export default {
     font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
     display: flex;
     justify-content: center;
+  }
+  .disabled{
+    pointer-events: none;
   }
 </style>
