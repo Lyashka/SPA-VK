@@ -1,45 +1,41 @@
 <template>
-    <div class="container_user_row" >
+  <div class="container_user_row" :style="backgroundMutualFriendPanel">
       
-        <button class="container disabled"  @click="$router.push(`/profile/${user.id}`)" >
-            <img class="imgFriend" :src="user.photo_50"/>
-            <div class="borderBottomFriend">
-                <div class="containerFriend">
-                    <div class="text_content">{{ user.first_name }} {{ user.last_name }}</div>
-                    <div class="mutual" >{{ user.mutual }}</div> 
-                    
-                </div>
-            </div>
-        </button>
-        <button class="imgBtn" @click="$emit('removeUser', user)"><img class="delete_btn" src="@/components/assets/delete.png"></button>
-       
-    </div>
- 
+      <button class="container"  @click="$router.push(`/profile/${user.id}`)">
+          <img class="imgFriend" :src="user.photo_50"/>
+          <div class="borderBottomFriend">
+              <div class="containerFriend">
+                  <div class="text_content">{{ user.first_name }} {{ user.last_name }}</div>
+                  <div class="mutual" >{{ user.friendInList.length}}</div> 
+                  
+              </div>
+          </div>
+      </button>
+      <!-- <button class="imgBtn" @click="$emit('removeUser', user)"><img class="delete_btn" src="@/components/assets/delete.png"></button> -->
+     
+  </div>
 </template>
 
 <script>
-
-
 export default {
-    data() {
-        return {
-            friendList: JSON.parse(localStorage.getItem('fiendList'))
-        }
-    },
     props: {
         user: {
             type: Object,
         },
+        mutualFriendList: {
+            type: Array,
+        },
     },
-    mounted() {
 
+    mounted(){
     },
-    // computed:{
-    //     backgroundUserpanel(){
-    //         let res = this.user.mutual / (this.friendList.length * 7)
-    //         return 'background-color:  rgba(0, 162  , 251, ' + res + ' )'
-    //     }
-    // }
+
+    computed:{
+        backgroundMutualFriendPanel(){
+            let res = this.user.mutual / (this.mutualFriendList.length / 30)
+            return 'background-color:  rgba(0, 162  , 251, ' + res + ' )'
+        }
+    }
 }
 </script>
 
@@ -100,8 +96,5 @@ export default {
   .delete_btn{
     height: 23px;
     width: 25px;
-  }
-  .disabled{
-    pointer-events: none;
   }
 </style>

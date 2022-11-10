@@ -5,6 +5,7 @@ import MyProfileFriend from '@/components/UI/MyProfileFriend'
 import MySignIn from '@/components/UI/MySignIn'
 import PreLoader from '@/components/UI/PreLoader'
 import MySearchWindow from '@/components/UI/MySearchWindow'
+import MyMutualFriend from '@/components/UI/MyMutualFriend'
 
 export default{
     MyWindowFriendList,
@@ -13,5 +14,6 @@ export default{
     MyProfileFriend,
     MySignIn,
     PreLoader,
-    MySearchWindow
+    MySearchWindow,
+    MyMutualFriend
 }

@@ -6,7 +6,7 @@
             <div class="borderBottomFriend">
                 <div class="containerFriend">
                     <div class="text_content">{{ user.first_name }} {{ user.last_name }}</div>
-                    <div class="mutual">{{ user.mutual }}</div> 
+                    <!-- <div class="mutual">{{ user.mutual }}</div>  -->
                 </div>
                 <button class="imgBtn" @click="$emit('addUserInList', user)"><img class="addUserBtn" src="@/components/assets/plus.png"></button> 
             </div>

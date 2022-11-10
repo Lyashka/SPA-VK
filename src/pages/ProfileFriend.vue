@@ -54,7 +54,7 @@
 
                 </PreLoader>
                 <div class="friendList">
-                    <friends-list-item v-for="friend in friendsUser" :friend="friend" :key="friend.id">
+                    <friends-list-item v-for="friend in friendsInListUser" :friend="friend" :key="friend.id">
 
                     </friends-list-item>
                 </div>
@@ -101,7 +101,9 @@ export default {
         visiblePreLoaderPosts: false,
         visiblePreLoaderFriends: false,
         myUserId: '',
-        linkValue: localStorage.getItem('linkValue')
+        linkValue: localStorage.getItem('linkValue'),
+        pullAllFriendsInList: [],
+        friendsInListUser: [], 
         }
     },
 
@@ -212,6 +214,16 @@ export default {
       }
     },
     mounted() {
+        if(this.pullAllFriendsInList !== null) {
+            this.pullAllFriendsInList = JSON.parse(localStorage.getItem('pullAllFriendsInList'))
+            this.pullAllFriendsInList.forEach(e => {
+                if(e.id == this.$route.params.id){
+                    this.friendsInListUser = e.friendInList
+                    // console.log(this.friendsInListUser);
+                }
+            })
+        }
+        // console.log(this.pullAllFriendsInList);
         this.myUserId = localStorage.getItem('userId')
         this.requestFriendsUser()
         this.requestUserGet()
