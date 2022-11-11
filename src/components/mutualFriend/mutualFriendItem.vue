@@ -38,7 +38,6 @@ export default {
     },
 
     mounted(){
-        console.log(this.user);
                 if(this.user.sex == 2){
                     this.sex = 'М'
                 }else if(this.user.sex == 1){

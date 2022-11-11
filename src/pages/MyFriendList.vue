@@ -165,12 +165,10 @@ export default {
         buildList(){
            this.visibleFriendList = true
             for(let F=0; F < this.friendList.length; F++){
-                // console.log('f');
                     for(let j = 0; j < this.mutualFriends.length; j++){
                         
                         
                         if(this.friendList[F].id == this.mutualFriends[j]){
-                            // console.log(this.mutualFriends[j]);
                             this.mutualValue.push(this.mutualFriends[j]) 
                             
                         }
@@ -178,10 +176,7 @@ export default {
                 this.friendList[F]['friendInList'] = this.mutualValue
                 this.mutualValue = []
             }
-            this.mutualFriendList =  this.pullAllFriendsInList
-            localStorage.setItem('mutualFriendList', JSON.stringify(this.mutualFriendList))
-            // console.log('mutualFriendList');
-            // console.log( this.mutualFriendList);
+            
 
 
             this.pullAllFriendsInList.forEach(element => {
@@ -199,9 +194,9 @@ export default {
             
 
             this.fullFilter = []
-            // console.log(this.pullAllFriendsInList);
             localStorage.setItem('pullAllFriendsInList', JSON.stringify(this.pullAllFriendsInList))
-
+            this.mutualFriendList =  this.pullAllFriendsInList
+            localStorage.setItem('mutualFriendList', JSON.stringify(this.mutualFriendList))
         //     setTimeout(()=>{
         //         this.pullAllFriendsInList.forEach(user => {
                 
@@ -250,7 +245,6 @@ export default {
                 access_token: this.MyAccessToken
             }).then(res => {
                 try {
-                    // console.log(res);
                     this.dataFriendsListUser.push(res.response.items);
                     this.friendList.push(user)
                     localStorage.setItem('fiendList',  JSON.stringify(this.friendList))
@@ -266,7 +260,6 @@ export default {
                                     element.friendInList.push(user) 
                                     this.pullAllFriendsInList.push(element)
                         });
-                        // console.log( this.pullAllFriendsInList);
                     
                         this.filterPullAllFriends = this.pullAllFriendsInList.filter((value, index, self) => //находим повторяющихся друзей
                         index !== self.findIndex((t) => (
@@ -288,8 +281,10 @@ export default {
                 } catch (error) {
                     console.log(error);
                 }
+                localStorage.setItem('pullAllFriendsInList', JSON.stringify(this.pullAllFriendsInList))
             })
-            localStorage.setItem('pullAllFriendsInList', JSON.stringify(this.pullAllFriendsInList))
+            
+            
             this.preLoaderVisibldeFriendList = false
         },
 
@@ -324,6 +319,7 @@ export default {
                     })
                     
                 })
+                localStorage.setItem('pullAllFriendsInList', JSON.stringify(this.pullAllFriendsInList))
                 this.preLoaderVisibldeFriendList = false
                 })
 
@@ -345,7 +341,7 @@ export default {
                 this.disabledBtn = 'disabled'
                 this.disabledSelect = 'disabled'
             } 
-            localStorage.setItem('pullAllFriendsInList', JSON.stringify(this.pullAllFriendsInList))
+            // localStorage.setItem('pullAllFriendsInList', JSON.stringify(this.pullAllFriendsInList))
            
         },
         
@@ -500,8 +496,9 @@ export default {
             this.friendList = JSON.parse(localStorage.getItem('fiendList'))
             this.disabledSelect = 'all'
         }   
-        if(JSON.parse(localStorage.getItem('pullAllFriendsInList')) != null){
+        if(JSON.parse(localStorage.getItem('pullAllFriendsInList')) !== null){
             this.pullAllFriendsInList = JSON.parse(localStorage.getItem('pullAllFriendsInList'))
+            console.log('fF');
         }
 
         this.userId = localStorage.getItem('userId')
