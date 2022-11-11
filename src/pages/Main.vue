@@ -35,7 +35,7 @@
    
     <my-sign-in-vue v-model:show="signInWindowVisible">
           <h4 class="text_content">Войти в приложение</h4>
-          <div class="signIn_container"><a class="text_content"  href="https://oauth.vk.com/authorize?client_id=51428350&display=popup&redirect_uri=https://lyashka.github.io/SPA-VK/&scope=offline,friends&users&response_type=token&v=v=5.131"><my-button class="signInBtn" @click="showWindowHide">Войти</my-button></a></div>
+          <div class="signIn_container"><a class="text_content"  href="https://oauth.vk.com/authorize?client_id=51428350&display=popup&redirect_uri=https://lyashka.github.io/SPA-VK/&scope=friends&users&response_type=token&v=v=5.131"><my-button class="signInBtn" @click="showWindowHide">Войти</my-button></a></div>
     </my-sign-in-vue>
     
 

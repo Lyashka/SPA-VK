@@ -6,7 +6,11 @@
           <div class="borderBottomFriend">
               <div class="containerFriend">
                   <div class="text_content">{{ user.first_name }} {{ user.last_name }}</div>
-                  <div class="mutual" >{{ user.friendInList.length}}</div> 
+                  <div class="container_add_content">
+                    <div class="mutual text_content_add">Общ. друзья: {{ user.friendInList.length}}</div> 
+                    <div class="text_content_add">{{ sex }}</div>
+                    <div class="text_content_add age_flex">Возраст: {{ age }}</div>
+                  </div>
                   
               </div>
           </div>
@@ -18,6 +22,12 @@
 
 <script>
 export default {
+    data(){
+        return{
+            sex: '',
+            age: '',
+        }
+    },
     props: {
         user: {
             type: Object,
@@ -28,6 +38,16 @@ export default {
     },
 
     mounted(){
+        console.log(this.user);
+                if(this.user.sex == 2){
+                    this.sex = 'М'
+                }else if(this.user.sex == 1){
+                    this.sex = 'Ж'
+                }
+                this.age = ((new Date().getTime() - new Date(this.user.bdate)) / (24 * 3600 * 365.25 * 1000)) | 0;
+                if(this.age == 0){
+                    this.age = '-'
+                }
     },
 
     computed:{
@@ -83,6 +103,7 @@ export default {
     font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
     display: flex;
     justify-content: center;
+    align-items: center;
   }
   .container_user_row{
     display: flex;
@@ -96,5 +117,17 @@ export default {
   .delete_btn{
     height: 23px;
     width: 25px;
+  }
+  .text_content_add{
+    font-size: 14px;
+    margin-right: 25px;
+  }
+  .container_add_content{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+  }
+  .age_flex{
+    width: 50px;
   }
 </style>

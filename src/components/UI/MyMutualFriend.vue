@@ -26,8 +26,8 @@
       background-color:aliceblue;
       border-radius: 12px;
       min-height: 390px;
-      min-width: 350px;
-      max-width: 350px;
+      min-width: 500px;
+      max-width: 450px;
       position: relative;
       box-shadow: 1px 1px   rgba(0, 0, 0, 0.265);
   }

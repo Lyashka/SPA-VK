@@ -32,7 +32,7 @@
                         v-model="selectedSort"
                         :options="sortoptionFriendList"
                         v-show="true"
-                        style="font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;">        
+                        style="font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI',Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;">        
                 </MySelect>
             </div>
         <div class="container_inside">
@@ -196,9 +196,30 @@ export default {
                 element['mutual'] = element.friendInList.length
             })
 
+            
+
             this.fullFilter = []
             // console.log(this.pullAllFriendsInList);
             localStorage.setItem('pullAllFriendsInList', JSON.stringify(this.pullAllFriendsInList))
+
+        //     setTimeout(()=>{
+        //         this.pullAllFriendsInList.forEach(user => {
+                
+        //         jsonp('https://api.vk.com/method/friends.get', //поиск друзей добавленного друга
+        //       {
+        //           user_id: `${user.id}`,
+        //           count: '100',
+        //           // fields: 'photo_50, sex, bdate',
+        //           v: '5.131',
+        //           access_token: this.MyAccessToken
+        //       }).then(res => {
+        //           console.log(res);
+        //       })
+          
+               
+        //   })
+        //     }, 1000)
+            
             setTimeout(()=>{
                 this.visibleFriendList = false
             }, 2000)
@@ -224,7 +245,7 @@ export default {
             {
                 user_id: `${user.id}`,
                 count: '100',
-                fields: 'photo_50',
+                fields: 'photo_50, sex, bdate',
                 v: '5.131',
                 access_token: this.MyAccessToken
             }).then(res => {
@@ -349,7 +370,7 @@ export default {
               access_token: this.MyAccessToken,
               count: '8',
               v: '5.131',
-              fields: "photo_50, screen_name",
+              fields: "photo_50, screen_name, sex, bdate",
             })
             .then(res => {
                  try {
@@ -409,7 +430,7 @@ export default {
               count: '8',
               offset: String(this.countOffsetSearchusers),
               v: '5.131',
-              fields: "photo_50",
+              fields: "photo_50, sex, bdate",
             })
             .then(res => {
                 res.response.items.forEach(e => {
@@ -418,6 +439,21 @@ export default {
             //   this.requestMutualFriends(res.response.items)
             })
         },
+        async getFriends(user) {
+            // setTimeout(()=>{
+               await jsonp('https://api.vk.com/method/friends.get', //поиск друзей добавленного друга
+                {
+                    user_id: `${user.id}`,
+                    count: '100',
+                    // fields: 'photo_50, sex, bdate',
+                    v: '5.131',
+                    access_token: this.MyAccessToken
+                }).then(res => {
+                    console.log(res);
+                })
+            // }, 1000)
+        }
+           
 
     },
 
@@ -505,6 +541,7 @@ export default {
 }
 .container_inside{
     /* margin-top: 30px; */
+    margin-right: 20px;
     display: flex;
     flex-direction: row;
     align-items: flex-start;
@@ -514,7 +551,7 @@ export default {
     margin-left: 10px;
 } */
 .search_container{ 
-    margin-right: 100px;
+    margin-right: 20px;
     display: flex;
     flex-direction: column;
     align-items: center;
