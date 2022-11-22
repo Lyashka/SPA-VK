@@ -71,7 +71,7 @@
                         style="font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;">        
                 </MySelect>
         </div>
-        <MyMutualFriend>
+        <MyMutualFriend class="text_style"> Количество друзей: {{mutualFriendList.length}}
             <mutualFriendVue :mutualFriendList="mutualFriendList">
 
             </mutualFriendVue>
@@ -163,6 +163,8 @@ export default {
 
     methods:{
         buildList(){
+            this.selectedSortFriends = ''
+            // console.log(this.sortoption);
            this.visibleFriendList = true
             for(let F=0; F < this.friendList.length; F++){
                     for(let j = 0; j < this.mutualFriends.length; j++){
@@ -197,24 +199,7 @@ export default {
             localStorage.setItem('pullAllFriendsInList', JSON.stringify(this.pullAllFriendsInList))
             this.mutualFriendList =  this.pullAllFriendsInList
             localStorage.setItem('mutualFriendList', JSON.stringify(this.mutualFriendList))
-        //     setTimeout(()=>{
-        //         this.pullAllFriendsInList.forEach(user => {
-                
-        //         jsonp('https://api.vk.com/method/friends.get', //поиск друзей добавленного друга
-        //       {
-        //           user_id: `${user.id}`,
-        //           count: '100',
-        //           // fields: 'photo_50, sex, bdate',
-        //           v: '5.131',
-        //           access_token: this.MyAccessToken
-        //       }).then(res => {
-        //           console.log(res);
-        //       })
-          
-               
-        //   })
-        //     }, 1000)
-            
+            console.log(this.mutualFriendList);
             setTimeout(()=>{
                 this.visibleFriendList = false
             }, 2000)
@@ -235,8 +220,8 @@ export default {
             this.requestFriendlListUser(user)
         },
 
-        requestFriendlListUser(user){ 
-            jsonp('https://api.vk.com/method/friends.search?', //поиск друзей добавленного друга
+        async requestFriendlListUser(user){ 
+            await  jsonp('https://api.vk.com/method/friends.search?', //поиск друзей добавленного друга
             {
                 user_id: `${user.id}`,
                 count: '100',
@@ -245,7 +230,26 @@ export default {
                 access_token: this.MyAccessToken
             }).then(res => {
                 try {
+                    // console.log(res.response.items);
                     this.dataFriendsListUser.push(res.response.items);
+                    // console.log( this.dataFriendsListUser);
+
+                    // this.dataFriendsListUser[0].forEach(e => {
+                      setTimeout(()=>{
+                        jsonp('https://api.vk.com/method/friends.getLists?', //поиск друзей добавленного друга
+                        {
+                            user_id: `${user.id}`,
+                            count: '100',
+                            // fields: 'photo_50, contacts, last_seen,relation,universities',
+                            v: '5.131',
+                            access_token: this.MyAccessToken
+                        }).then(res => {
+                            console.log(res);
+                        })
+                       } ) 
+                    // console.log(e);
+                    // })
+
                     this.friendList.push(user)
                     localStorage.setItem('fiendList',  JSON.stringify(this.friendList))
                     this.disabledSelect = 'all'
@@ -286,6 +290,8 @@ export default {
             
             
             this.preLoaderVisibldeFriendList = false
+
+            
         },
 
         // Удалить друга из списка
@@ -467,12 +473,14 @@ export default {
     },
 
     selectedSortFriends(newValue){
+        JSON.stringify(localStorage.setItem('selectedSortFriends', newValue))
+        console.log(newValue);
         if(newValue != 'mutual'){
-        this.pullAllFriendsInList.sort( (friend1, friend2) => {
+        this.mutualFriendList.sort( (friend1, friend2) => {
           return friend1[newValue]?.localeCompare(friend2[newValue])
           })
         }else if(newValue == 'mutual'){
-          this.pullAllFriendsInList.sort((friend1, friend2)=> {
+          this.mutualFriendList.sort((friend1, friend2)=> {
           return friend2.mutual - friend1.mutual  
           }) 
         }
@@ -480,7 +488,15 @@ export default {
   },
     
     mounted(){
-       
+       if( JSON.parse(localStorage.getItem('pullAllFriendsInList')) != null){
+        this.visibleFriendList = true
+        this.mutualFriendList = JSON.parse(localStorage.getItem('pullAllFriendsInList'))
+        this.selectedSortFriends  = localStorage.getItem('selectedSortFriends')
+        setTimeout(()=>{
+                this.visibleFriendList = false
+            }, 2000)
+       }
+
         this.linkValue = '/friendList'
         localStorage.setItem('linkValue', this.linkValue)
 
@@ -600,7 +616,7 @@ export default {
 .preLoader{
   position:absolute;
   margin-top: 100px;
-  margin-left: 130px;
+  margin-left: 200px;
 }
 .userNotFound{
     margin-left: 10px;
@@ -618,5 +634,8 @@ export default {
     display: flex;
     margin-left: 40%;
     margin-top: -10%;
+}
+.text_style{
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
 }
 </style>
